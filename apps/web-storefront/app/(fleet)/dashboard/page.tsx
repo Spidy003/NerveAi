@@ -198,12 +198,22 @@ function CyberCircularMeter({
 export default function CarDashboardPage() {
   const router = useRouter();
 
+  // Auth Guard
+  useEffect(() => {
+    const hasDemo = typeof document !== "undefined" && document.cookie.includes("nerve_demo_session=active");
+    const hasSb = typeof document !== "undefined" && document.cookie.split(";").some((c) => c.trim().startsWith("sb-"));
+    if (!hasDemo && !hasSb) {
+      router.push("/login");
+    }
+  }, [router]);
+
   // Theme Sync
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   useEffect(() => {
     const saved = localStorage.getItem("cyber-theme");
     if (saved === "light" || saved === "dark") setTheme(saved);
   }, []);
+
 
   const toggleTheme = () => {
     const next = theme === "dark" ? "light" : "dark";
