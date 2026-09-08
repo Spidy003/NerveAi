@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+python-dotenv
+supabase
+motor
+pymongo
+razorpay
+twilio
+resend
+python-jose[cryptography]
+pydantic
+pydantic-settings
+httpx
+websockets

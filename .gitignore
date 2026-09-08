@@ -1,0 +1,42 @@
+# Environment files — NEVER commit these
+.env
+.env.*
+.env.local
+.env.production
+.env.master
+!.env.example
+
+# Model files (too large for git — use Git LFS or direct download)
+*.pt
+*.h5
+*.pkl
+*.onnx
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+
+# Node
+node_modules/
+.next/
+dist/
+build/
+
+# Datasets
+apps/simulator/datasets/nasa_cmapss/*.txt
+apps/simulator/datasets/processed/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/settings.json
+.idea/
+
+# Scratch & Temporary files
+scratch/
+transparency_*.glb

@@ -1,0 +1,156 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #07090C;
+}
+::-webkit-scrollbar-thumb {
+  background: #1E2633;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2DE1C2;
+}
+
+/* Base Body */
+body {
+  background-color: #07090C;
+  color: #C7D0D9;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Animated Grid Pattern */
+.bg-grid-tech {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(45, 225, 194, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(45, 225, 194, 0.05) 1px, transparent 1px);
+}
+
+/* Cyberpunk Chamfered Cut Corners & HUD borders */
+.cyber-chamfer {
+  clip-path: polygon(
+    14px 0, 100% 0, 
+    100% calc(100% - 14px), calc(100% - 14px) 100%, 
+    0 100%, 0 14px
+  );
+}
+
+.cyber-chamfer-lg {
+  clip-path: polygon(
+    20px 0, 100% 0, 
+    100% calc(100% - 20px), calc(100% - 20px) 100%, 
+    0 100%, 0 20px
+  );
+}
+
+.cyber-chamfer-button {
+  clip-path: polygon(
+    12px 0, 100% 0, 
+    100% calc(100% - 12px), calc(100% - 12px) 100%, 
+    0 100%, 0 12px
+  );
+}
+
+.cyber-input-chamfer {
+  clip-path: polygon(
+    8px 0, 100% 0,
+    100% calc(100% - 8px), calc(100% - 8px) 100%,
+    0 100%, 0 8px
+  );
+}
+
+.bg-radial-gradient-hero {
+  background: radial-gradient(circle at 50% 30%, rgba(45, 225, 194, 0.12) 0%, rgba(108, 92, 231, 0.06) 45%, transparent 75%);
+}
+
+/* Glowing Conic Button Border */
+@keyframes spin-conic {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-conic-glow {
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.animate-conic-glow::before {
+  content: '';
+  position: absolute;
+  z-index: -2;
+  left: -50%;
+  top: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(transparent, #2DE1C2, #7B61FF, transparent 30%);
+  animation: spin-conic 4s linear infinite;
+}
+
+.animate-conic-glow::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 1.5px;
+  background: #0B0F14;
+  border-radius: inherit;
+}
+
+/* Glassmorphism Classes */
+.glass-panel {
+  background: rgba(15, 20, 28, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(45, 225, 194, 0.15);
+}
+
+.glass-panel-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glass-panel-hover:hover {
+  background: rgba(18, 24, 34, 0.8);
+  border-color: rgba(45, 225, 194, 0.4);
+  box-shadow: 0 10px 30px -10px rgba(45, 225, 194, 0.15);
+}
+
+/* Telemetry scanline / signal sweep */
+@keyframes signal-sweep {
+  0% { transform: translateY(-100%); opacity: 0; }
+  50% { opacity: 0.6; }
+  100% { transform: translateY(100%); opacity: 0; }
+}
+
+.scanline {
+  animation: signal-sweep 3s ease-in-out infinite;
+}
+
+/* Respect Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  body {
+    cursor: auto !important;
+  }
+}
