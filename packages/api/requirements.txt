@@ -12,3 +12,4 @@ pydantic
 pydantic-settings
 httpx
 websockets
+numpy

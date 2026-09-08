@@ -89,6 +89,18 @@ app.include_router(admin.router,     prefix="", tags=["Admin"])
 app.include_router(webhooks.router,  prefix="", tags=["Webhooks"])
 
 
+@app.get("/", tags=["System"])
+async def root():
+    return {
+        "status": "online",
+        "service": "Nerve AI Predictive Fleet Telemetry Engine",
+        "version": "1.0.0",
+        "docs": "/docs",
+        "health": "/health",
+        "timestamp": datetime.utcnow().isoformat(),
+    }
+
+
 @app.get("/health", tags=["System"])
 async def health_check():
     return {
@@ -96,6 +108,7 @@ async def health_check():
         "inference_engine": INFERENCE_AVAILABLE,
         "timestamp": datetime.utcnow().isoformat(),
     }
+
 
 
 # ──────────────────────────────────────────────────────────────

@@ -7,7 +7,7 @@ export function useWebSocket(vehicleId: string) {
   useEffect(() => {
     if (!vehicleId) return;
 
-    const wsUrl = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:8000';
+    const wsUrl = process.env.NEXT_PUBLIC_WS_URL || 'wss://nerve-ai-backend.onrender.com';
     const ws = new WebSocket(`${wsUrl}/ws/${vehicleId}`);
 
     ws.onopen = () => {
