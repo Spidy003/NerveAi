@@ -6,11 +6,13 @@
 .env.master
 !.env.example
 
-# Model files (too large for git — use Git LFS or direct download)
+# Model files (too large for git — use Git LFS or direct download, except trained Nerve AI weights)
 *.pt
 *.h5
 *.pkl
 *.onnx
+!apps/simulator/ml/lstm_model/nerve_lstm_best.pt
+!apps/simulator/ml/lstm_model/nerve_scaler.pkl
 
 # Python
 __pycache__/

@@ -2,12 +2,14 @@
   "name": "nerve-ai-monorepo",
   "version": "1.0.0",
   "private": true,
-  "description": "Nerve AI - Predictive Fleet Maintenance & Energy Optimizer",
+  "description": "Nerve AI - Predictive Fleet Telemetry, Digital Cockpit & Autonomous Parts Procurement",
   "scripts": {
     "dev:storefront": "npm --prefix apps/web-storefront run dev",
     "dev:admin": "npm --prefix apps/admin-dashboard run dev",
     "dev": "npm --prefix apps/web-storefront run dev",
     "build:storefront": "npm --prefix apps/web-storefront run build",
-    "build:admin": "npm --prefix apps/admin-dashboard run build"
+    "build:admin": "npm --prefix apps/admin-dashboard run build",
+    "start:api": "uvicorn main:app --reload --port 8000 --app-dir packages/api",
+    "start:simulator": "python apps/simulator/ml/lstm_model/inference.py"
   }
 }
