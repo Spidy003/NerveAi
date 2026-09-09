@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import {
+  Truck,
   Car,
   Activity,
   AlertTriangle,
@@ -31,9 +32,9 @@ import {
 import toast from "react-hot-toast";
 import { useWebSocket } from "@/lib/hooks/useWebSocket";
 
-// Dynamic Client-Only 3D WebGL Car Model with 360° Orbit Controls
-const MercedesCar3D = dynamic(
-  () => import("@/components/landing/MercedesCar3D"),
+// Dynamic Client-Only 3D WebGL Airport Catering Truck Model with 360° Orbit Controls
+const AirportTruck3D = dynamic(
+  () => import("@/components/landing/AirportTruck3D"),
   { ssr: false }
 );
 
@@ -614,9 +615,9 @@ export default function CarDashboardPage() {
           {/* Header */}
           <div className="flex items-center justify-between border-b border-gray-800/60 pb-1.5 shrink-0 z-20">
             <div className="flex items-center gap-2">
-              <Car className="w-4 h-4 text-[#2DE1C2]" />
+              <Truck className="w-4 h-4 text-[#2DE1C2]" />
               <span className="font-mono text-xs uppercase font-bold text-[#2DE1C2]">
-                // 3D ORBIT CAR MODEL • 360° INSPECTION
+                // 3D TELEMETRY FLEET TRUCK • 360° INSPECTION
               </span>
             </div>
             <div className="flex items-center gap-2">
@@ -627,7 +628,7 @@ export default function CarDashboardPage() {
 
           {/* 3D WebGL Model Container (Fills entire available height smoothly) */}
           <div className="relative flex-1 w-full min-h-[300px] lg:min-h-0 flex items-center justify-center overflow-visible my-1">
-            <MercedesCar3D theme={theme} autoRotateSpeed={0.8} framingScale={0.70} className="w-full h-full min-h-0" />
+            <AirportTruck3D theme={theme} autoRotateSpeed={0.8} framingScale={0.72} className="w-full h-full min-h-0" />
 
             {/* Floating Sensor Badges on Corners */}
             <div className="absolute top-2 left-2 px-2 py-1 rounded-lg bg-black/85 text-[10px] font-mono text-[#2DE1C2] border border-cyan/40 shadow-lg pointer-events-none flex items-center gap-1.5">
@@ -639,7 +640,7 @@ export default function CarDashboardPage() {
               <span>OBD-II: J1962 LOCK</span>
             </div>
             <div className="absolute bottom-2 left-2 px-2 py-1 rounded-lg bg-black/85 text-[10px] font-mono text-gray-300 border border-gray-700 shadow-lg pointer-events-none">
-              TYRES: FL 33 • FR 33 • RL 34 • RR 34 PSI
+              TYRES: FL 110 • FR 110 • RL 120 • RR 120 PSI
             </div>
             <div className="absolute bottom-2 right-2 px-2 py-1 rounded-lg bg-black/85 text-[10px] font-mono text-white border border-gray-700 shadow-lg pointer-events-none">
               GNSS: 10HZ RTK • LAT 19.0760° N

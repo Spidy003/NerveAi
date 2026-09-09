@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useCart } from "@/lib/hooks/useCart";
+import { useAuth } from "@/lib/hooks/useAuth";
+import AuthModal from "@/components/shared/AuthModal";
 import { Trash2, ArrowRight, ShieldCheck, Cpu, ArrowLeft, Sun, Moon, ShoppingBag, Sparkles, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -9,8 +11,10 @@ import toast from "react-hot-toast";
 
 export default function CartPage() {
   const { items, updateQuantity, totalUpfront, totalMonthly, addItem, clearCart } = useCart();
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem("cyber-theme");
@@ -298,8 +302,14 @@ export default function CartPage() {
                 </div>
 
                 <button
-                  onClick={() => router.push("/checkout")}
-                  className="w-full py-4 bg-[#2DE1C2] hover:bg-[#25c4a8] text-black font-mono font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-[0_0_25px_rgba(45,225,194,0.4)] flex items-center justify-center gap-2 mb-4 group"
+                  onClick={() => {
+                    if (isAuthenticated) {
+                      router.push("/checkout");
+                    } else {
+                      setShowAuthModal(true);
+                    }
+                  }}
+                  className="w-full py-4 bg-[#2DE1C2] hover:bg-[#25c4a8] text-black font-mono font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-[0_0_25px_rgba(45,225,194,0.4)] flex items-center justify-center gap-2 mb-4 group cursor-pointer"
                 >
                   <span>Proceed to Encrypted Checkout</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -315,6 +325,14 @@ export default function CartPage() {
           </div>
         )}
       </div>
+
+      {/* Auth Modal if customer is not logged in */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        redirectTo="/checkout"
+        title="Sign In or Register to Checkout"
+      />
     </div>
   );
 }

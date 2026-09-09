@@ -40,3 +40,9 @@ Thumbs.db
 # Scratch & Temporary files
 scratch/
 transparency_*.glb
+iloc/
+apps/iloc f/
+apps/web-storefront/public/frames/
+/airport_catering_truck.glb
+/scania_truck.glb
+/WhatsApp Video*.mp4

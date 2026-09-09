@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useCart } from "@/lib/hooks/useCart";
+import { useAuth } from "@/lib/hooks/useAuth";
+import AuthModal from "@/components/shared/AuthModal";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Script from "next/script";
@@ -10,9 +12,11 @@ import { ShieldCheck, Lock, ArrowLeft, Sun, Moon, CreditCard, Building2, Truck, 
 
 export default function CheckoutPage() {
   const { totalUpfront, totalMonthly, items, clearCart } = useCart();
+  const { isAuthenticated, user } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem("cyber-theme");
@@ -35,6 +39,18 @@ export default function CheckoutPage() {
     address: "Plot 14, Commercial Freight Terminal, NH-48, New Delhi 110037",
     gst: "07AAECD9876K1ZQ",
   });
+
+  // Pre-fill form data when authenticated user is detected
+  useEffect(() => {
+    if (user) {
+      setFormData((prev) => ({
+        ...prev,
+        email: user.email || prev.email,
+        phone: user.phone || prev.phone,
+        fleetName: user.fleet_name || prev.fleetName,
+      }));
+    }
+  }, [user]);
 
   const effectiveHardware = totalUpfront > 0 ? totalUpfront : 14990;
   const effectiveMonthly = totalMonthly > 0 ? totalMonthly : 1800;
@@ -153,6 +169,37 @@ export default function CheckoutPage() {
               Compliant under IT Act 2000 (Module 4) &amp; Rule 46 CGST Tax Structure (Module 6)
             </p>
           </div>
+
+          {/* Customer Authentication Status Banner */}
+          {isAuthenticated ? (
+            <div className="mb-6 p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono">
+              <div className="flex items-center gap-2.5 text-emerald-400">
+                <CheckCircle2 className="w-4 h-4 shrink-0" />
+                <span>
+                  LOGGED IN AS: <strong>{user?.email}</strong> ({user?.fleet_name || "Commercial Fleet"})
+                </span>
+              </div>
+              <span className="text-[10px] text-gray-400 font-bold tracking-wider">
+                ✓ VERIFIED PROCUREMENT SESSION
+              </span>
+            </div>
+          ) : (
+            <div className="mb-6 p-4 rounded-xl border border-amber-500/40 bg-amber-500/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono">
+              <div className="flex items-center gap-2.5 text-amber-400">
+                <Lock className="w-4 h-4 shrink-0" />
+                <span>
+                  NOT SIGNED IN: Please sign in or register to link telemetry hardware and digital invoices to your fleet account.
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowAuthModal(true)}
+                className="px-4 py-2 bg-amber-400 hover:bg-amber-300 text-black font-bold rounded-lg text-xs tracking-wider uppercase transition-all shrink-0 cursor-pointer"
+              >
+                SIGN IN / REGISTER →
+              </button>
+            </div>
+          )}
 
           <form onSubmit={handlePayment} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Form Column */}
@@ -341,21 +388,46 @@ export default function CheckoutPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-4 bg-[#2DE1C2] hover:bg-[#25c4a8] text-black font-mono font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-[0_0_25px_rgba(45,225,194,0.4)] flex items-center justify-center gap-2 disabled:opacity-50"
+                  className="w-full py-4 bg-[#2DE1C2] hover:bg-[#25c4a8] text-black font-mono font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-[0_0_25px_rgba(45,225,194,0.4)] flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
                 >
                   <ShieldCheck className="w-4 h-4" />
-                  <span>{loading ? "TRANSMITTING EDI 850..." : `Authorize ₹${total.toLocaleString()}`}</span>
+                  <span>{loading ? "TRANSMITTING EDI 850..." : `Authorize ₹${total.toLocaleString()} via Razorpay`}</span>
+                </button>
+
+                {/* Instant Test Simulator / Viva Bypass Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setLoading(true);
+                    toast.success("✅ Test Payment Verified via Sandbox Node! Generating EDI 850...");
+                    setTimeout(() => {
+                      clearCart();
+                      router.push("/order-confirmation");
+                    }, 800);
+                  }}
+                  className="w-full mt-3 py-3 border border-[#2DE1C2]/60 hover:bg-[#2DE1C2]/15 text-[#2DE1C2] font-mono font-bold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <span>⚡ Instant Test Settlement (Bypass Modal)</span>
                 </button>
 
                 <div className="mt-4 p-3 rounded-lg bg-gray-900/40 border border-gray-800 text-[10px] font-mono text-gray-400 leading-relaxed">
-                  <span className="text-[#2DE1C2] font-bold block mb-1">// SYLLABUS COMPLIANCE:</span>
-                  Transmits ANSI X12 EDI 850 PO file and generates formal Rule 46 CGST Tax Invoice upon settlement.
+                  <span className="text-[#2DE1C2] font-bold block mb-1">// TEST PAYMENT INSTRUCTIONS:</span>
+                  • In Razorpay modal, select <strong>Netbanking</strong> (any test bank) or use card ending in <strong>1111</strong>.<br/>
+                  • Or click <strong>Instant Test Settlement</strong> above to immediately proceed to EDI 850 generation and customer console.
                 </div>
               </div>
             </div>
           </form>
         </div>
       </div>
+
+      {/* Auth Modal for Unauthenticated Checkout Guests */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        redirectTo="/checkout"
+        title="Sign In or Register Fleet Account"
+      />
     </>
   );
 }

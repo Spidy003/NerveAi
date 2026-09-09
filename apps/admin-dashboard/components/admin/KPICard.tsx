@@ -12,33 +12,31 @@ interface KPICardProps {
 
 export function KPICard({ title, value, icon: Icon, change, changeLabel, trend = "neutral" }: KPICardProps) {
   return (
-    <div className={clsx(
-      "bg-card rounded-xl p-6 border-l-4 border-gray-800 shadow-sm flex flex-col justify-between",
-      trend === "up" && "border-l-primary",
-      trend === "down" && "border-l-red-500",
-      trend === "neutral" && "border-l-gray-600"
-    )}>
+    <div className="neu-flat rounded-3xl p-6 flex flex-col justify-between transition-all hover:scale-[1.01]">
       <div className="flex justify-between items-start">
-        <h3 className="text-gray-400 font-medium text-sm">{title}</h3>
-        <div className="p-2 bg-gray-800/50 rounded-lg">
-          <Icon className="w-5 h-5 text-gray-300" />
+        <div>
+          <span className="text-xs font-bold uppercase tracking-wider text-slate-400">{title}</span>
+          <div className="text-2xl font-black text-slate-800 mt-2">{value}</div>
+        </div>
+
+        <div className="w-12 h-12 neu-inset rounded-2xl flex items-center justify-center text-blue-600">
+          <Icon className="w-5 h-5" />
         </div>
       </div>
       
-      <div className="mt-4">
-        <div className="text-2xl font-bold text-white">{value}</div>
-        {change !== undefined && (
-          <div className="flex items-center gap-2 mt-1">
-            <span className={clsx(
-              "text-xs font-semibold",
-              trend === "up" ? "text-primary" : trend === "down" ? "text-red-500" : "text-gray-400"
-            )}>
-              {trend === "up" ? "+" : ""}{change}%
-            </span>
-            {changeLabel && <span className="text-xs text-gray-500">{changeLabel}</span>}
-          </div>
-        )}
-      </div>
+      {change !== undefined && (
+        <div className="flex items-center gap-2 mt-4 pt-3 border-t border-slate-200/60">
+          <span className={clsx(
+            "text-xs font-bold px-2 py-0.5 rounded-full flex items-center gap-0.5",
+            trend === "up" ? "text-emerald-700 bg-emerald-100/80" : 
+            trend === "down" ? "text-rose-700 bg-rose-100/80" : "text-slate-600 bg-slate-100"
+          )}>
+            <span>{trend === "up" ? "▲" : trend === "down" ? "▼" : "•"}</span>
+            {trend === "up" ? "+" : ""}{change}%
+          </span>
+          {changeLabel && <span className="text-xs text-slate-400 font-medium">{changeLabel}</span>}
+        </div>
+      )}
     </div>
   );
 }

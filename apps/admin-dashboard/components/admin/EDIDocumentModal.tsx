@@ -100,24 +100,24 @@ export default function EDIDocumentModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-      <div className="relative w-full max-w-4xl bg-[#0D1117] border border-gray-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
+      <div className="relative w-full max-w-4xl bg-[#E6ECF5] border border-slate-300 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800 bg-[#161B22]">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-300/80 bg-[#E6ECF5]">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-primary/20 text-primary">
-              <FileText className="w-5 h-5 text-[#00C896]" />
+            <div className="p-2.5 rounded-2xl neu-inset text-blue-600">
+              <FileText className="w-5 h-5 text-blue-600" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-base font-bold text-white">
+                <h3 className="text-base font-black text-slate-800">
                   EDI Document Inspector (ANSI X12 Standard)
                 </h3>
-                <span className="px-2 py-0.5 text-[11px] font-mono rounded bg-primary/20 text-[#00C896] font-semibold">
+                <span className="px-2.5 py-0.5 text-[11px] font-mono rounded-full bg-blue-100 text-blue-700 font-bold">
                   Module 3: EDI
                 </span>
               </div>
-              <p className="text-xs text-gray-400 font-mono">
+              <p className="text-xs text-slate-500 font-medium">
                 Order ID: {order.id} • Buyer: {order.customer} • Amount: ₹
                 {order.amount.toLocaleString()}
               </p>
@@ -125,21 +125,21 @@ export default function EDIDocumentModal({
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
+            className="w-9 h-9 rounded-full neu-btn flex items-center justify-center text-slate-500 hover:text-slate-800 transition-colors"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Tab Selection Bar */}
-        <div className="flex items-center justify-between px-6 py-3 border-b border-gray-800 bg-[#11151C]">
+        <div className="flex items-center justify-between px-6 py-3 border-b border-slate-300/70 bg-[#E6ECF5]">
           <div className="flex items-center gap-2">
             <button
               onClick={() => setDocType("850")}
-              className={`px-4 py-2 text-xs font-mono font-bold rounded-lg transition-colors flex items-center gap-2 ${
+              className={`px-4 py-2 text-xs font-mono font-bold rounded-xl transition-all flex items-center gap-2 cursor-pointer ${
                 docType === "850"
-                  ? "bg-[#00C896] text-black"
-                  : "bg-gray-800 text-gray-400 hover:text-white"
+                  ? "neu-btn-primary"
+                  : "neu-btn text-slate-600 hover:text-slate-900"
               }`}
             >
               <Code2 className="w-3.5 h-3.5" />
@@ -147,10 +147,10 @@ export default function EDIDocumentModal({
             </button>
             <button
               onClick={() => setDocType("855")}
-              className={`px-4 py-2 text-xs font-mono font-bold rounded-lg transition-colors flex items-center gap-2 ${
+              className={`px-4 py-2 text-xs font-mono font-bold rounded-xl transition-all flex items-center gap-2 cursor-pointer ${
                 docType === "855"
-                  ? "bg-[#00C896] text-black"
-                  : "bg-gray-800 text-gray-400 hover:text-white"
+                  ? "neu-btn-primary"
+                  : "neu-btn text-slate-600 hover:text-slate-900"
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
@@ -161,11 +161,11 @@ export default function EDIDocumentModal({
           <div className="flex items-center gap-2">
             <button
               onClick={handleCopy}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono bg-gray-800 hover:bg-gray-700 text-white transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono neu-btn text-slate-700 font-semibold cursor-pointer"
             >
               {copied ? (
                 <>
-                  <Check className="w-3.5 h-3.5 text-[#00C896]" />
+                  <Check className="w-3.5 h-3.5 text-blue-600" />
                   Copied!
                 </>
               ) : (
@@ -177,7 +177,7 @@ export default function EDIDocumentModal({
             </button>
             <button
               onClick={handleDownload}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono bg-[#00C896] hover:bg-[#00A87E] text-black font-semibold transition-colors"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-mono neu-btn-primary font-bold cursor-pointer"
             >
               <Download className="w-3.5 h-3.5" />
               Download .EDI
@@ -187,7 +187,7 @@ export default function EDIDocumentModal({
 
         {/* Document Content */}
         <div className="p-6 overflow-y-auto flex-1 space-y-4">
-          <div className="p-4 bg-[#0A0D12] border border-gray-800 rounded-xl font-mono text-xs text-gray-300 leading-relaxed overflow-x-auto selection:bg-[#00C896]/30">
+          <div className="p-4 neu-inset rounded-2xl font-mono text-xs text-slate-800 leading-relaxed overflow-x-auto selection:bg-blue-200">
             {currentEDI.split("\n").map((line, idx) => {
               const seg = line.split("*")[0];
               const isHeader = ["ISA", "GS", "ST"].includes(seg);
@@ -195,24 +195,24 @@ export default function EDIDocumentModal({
               const isItem = ["PO1", "PID", "ACK"].includes(seg);
 
               return (
-                <div key={idx} className="hover:bg-white/5 px-2 py-0.5 rounded flex items-center">
-                  <span className="w-8 text-gray-600 select-none text-[10px]">
+                <div key={idx} className="hover:bg-blue-50/60 px-2 py-0.5 rounded flex items-center">
+                  <span className="w-8 text-slate-400 select-none text-[10px]">
                     {(idx + 1).toString().padStart(2, "0")}
                   </span>
                   <span
                     className={`font-bold mr-2 ${
                       isHeader
-                        ? "text-blue-400"
+                        ? "text-blue-600"
                         : isTail
-                        ? "text-amber-400"
+                        ? "text-amber-600"
                         : isItem
-                        ? "text-[#00C896]"
-                        : "text-purple-400"
+                        ? "text-emerald-600"
+                        : "text-indigo-600"
                     }`}
                   >
                     {seg}
                   </span>
-                  <span className="text-gray-300">
+                  <span className="text-slate-700">
                     {line.slice(seg.length)}
                   </span>
                 </div>
@@ -221,33 +221,33 @@ export default function EDIDocumentModal({
           </div>
 
           {/* Academic Segment Decoder (Direct Viva Assistant) */}
-          <div className="bg-[#161B22] border border-gray-800 rounded-xl p-4 text-xs font-mono">
-            <h4 className="font-bold text-[#00C896] mb-2 flex items-center gap-2">
+          <div className="neu-flat rounded-2xl p-4 text-xs font-mono">
+            <h4 className="font-bold text-blue-600 mb-2 flex items-center gap-2">
               <span>// SYLLABUS DECODER (ANSI X12 EDI SEGMENTS)</span>
             </h4>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-[11px] text-gray-400">
-              <div className="bg-[#0D1117] p-2.5 rounded border border-gray-800">
-                <span className="text-blue-400 font-bold block">ISA / GS / ST:</span>
-                Interchange Envelope, Functional Group & Transaction Set Header
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-[11px] text-slate-600">
+              <div className="neu-inset p-3 rounded-xl">
+                <span className="text-blue-600 font-bold block">ISA / GS / ST:</span>
+                Interchange Envelope, Functional Group &amp; Transaction Set Header
               </div>
-              <div className="bg-[#0D1117] p-2.5 rounded border border-gray-800">
-                <span className="text-[#00C896] font-bold block">PO1 / PID / ACK:</span>
-                Line item purchase (OBD-II hardware & recurring SaaS telemetry)
+              <div className="neu-inset p-3 rounded-xl">
+                <span className="text-emerald-600 font-bold block">PO1 / PID / ACK:</span>
+                Line item purchase (OBD-II hardware &amp; recurring SaaS telemetry)
               </div>
-              <div className="bg-[#0D1117] p-2.5 rounded border border-gray-800">
-                <span className="text-amber-400 font-bold block">CTT / SE / IEA:</span>
-                Transaction hash summary, segment count validation & trailer
+              <div className="neu-inset p-3 rounded-xl">
+                <span className="text-amber-600 font-bold block">CTT / SE / IEA:</span>
+                Transaction hash summary, segment count validation &amp; trailer
               </div>
             </div>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-3 border-t border-gray-800 bg-[#161B22] flex items-center justify-between text-xs font-mono text-gray-400">
+        <div className="px-6 py-3 border-t border-slate-300/80 bg-[#E6ECF5] flex items-center justify-between text-xs font-mono text-slate-500">
           <span>Standard: ANSI ASC X12 Release 004010</span>
           <button
             onClick={onClose}
-            className="px-4 py-1.5 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors"
+            className="px-4 py-1.5 neu-btn text-slate-700 hover:text-slate-900 rounded-xl font-bold transition-all cursor-pointer"
           >
             Close Inspector
           </button>

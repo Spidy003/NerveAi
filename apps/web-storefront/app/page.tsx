@@ -4,21 +4,17 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import CyberMechBackground from "@/components/landing/CyberMechBackground";
-import { Check, ArrowRight, ShieldCheck, MapPin, Award, Phone, Send, Search, Sun, Moon, Cpu, Activity, Zap, HardDrive } from "lucide-react";
+import FleetRoiCalculator from "@/components/landing/FleetRoiCalculator";
+import { Check, ArrowRight, ShieldCheck, Award, Phone, Send, Sun, Moon, Cpu, Activity, Zap, HardDrive, Calculator, Play } from "lucide-react";
 
-// Dynamic 3D Model Imports (Client-only WebGL)
-const MercedesCar3D = dynamic(
-  () => import("@/components/landing/MercedesCar3D"),
-  { ssr: false }
-);
-
-const MercedesCockpit3D = dynamic(
-  () => import("@/components/landing/MercedesCockpit3D"),
+// Client-only dynamic 3D Model import
+const AirportTruck3D = dynamic(
+  () => import("@/components/landing/AirportTruck3D"),
   { ssr: false }
 );
 
 export default function HomePage() {
-  const [activeNav, setActiveNav] = useState<"home" | "modules" | "depots" | "pricing" | "contact">("home");
+  const [activeNav, setActiveNav] = useState<"home" | "demo" | "modules" | "calculator" | "contact">("home");
   const [theme, setTheme] = useState<"dark" | "light">("dark");
 
   // Load saved theme preference on mount
@@ -41,18 +37,16 @@ export default function HomePage() {
   const [formData, setFormData] = useState({
     name: "Delhi Logistics Express",
     email: "dispatch@delhiexpress.in",
-    depot: "New Delhi (Central)",
     fleetSize: "25 Vehicles",
     notes: "",
   });
   const [bookingSuccess, setBookingSuccess] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const [subscribeEmail, setSubscribeEmail] = useState("");
   const [subscribeSuccess, setSubscribeSuccess] = useState(false);
   const [contactSuccess, setContactSuccess] = useState(false);
 
   // Smooth scroll handler
-  const scrollToSection = (id: "home" | "modules" | "depots" | "pricing" | "contact") => {
+  const scrollToSection = (id: "home" | "demo" | "modules" | "calculator" | "contact") => {
     setActiveNav(id);
     const element = document.getElementById(id);
     if (element) {
@@ -60,13 +54,13 @@ export default function HomePage() {
     }
   };
 
-  // Scroll spy to update active navbar item as user scrolls
+  // Scroll spy
   useEffect(() => {
-    const sections: ("home" | "modules" | "depots" | "pricing" | "contact")[] = [
+    const sections: ("home" | "demo" | "modules" | "calculator" | "contact")[] = [
       "home",
+      "demo",
       "modules",
-      "depots",
-      "pricing",
+      "calculator",
       "contact",
     ];
 
@@ -108,95 +102,75 @@ export default function HomePage() {
     setTimeout(() => setContactSuccess(false), 4500);
   };
 
-  // Fleet Service Depots across Indian Freight Corridors
-  const allDepots = [
-    { city: "NEW DELHI (CENTRAL)", address: "Connaught Place, Barakhamba Logistics Hub", phone: "+91 11 4543 5601", status: "ONLINE", slots: "14 Technicians On-Duty" },
-    { city: "GURUGRAM (FREIGHT BAY)", address: "DLF CyberHub & NH-48 Express Terminal", phone: "+91 124 4543 5602", status: "ONLINE", slots: "8 Technicians On-Duty" },
-    { city: "BENGALURU (TECH CORRIDOR)", address: "Outer Ring Road, Bellandur Freight Depot", phone: "+91 80 4543 5603", status: "ONLINE", slots: "19 Technicians On-Duty" },
-    { city: "MUMBAI (PORT TERMINAL)", address: "Bandra Kurla Complex, JNPT Logistics Link", phone: "+91 22 4543 5604", status: "ONLINE", slots: "6 Technicians On-Duty" },
-  ];
-
-  const filteredDepots = searchQuery.trim()
-    ? allDepots.filter(
-        (b) =>
-          b.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          b.address.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : allDepots;
-
   return (
     <div
-      className={`relative min-h-screen w-full flex flex-col overflow-x-hidden font-cyber select-none transition-colors duration-300 ${
-        isLight ? "bg-[#F4F7FA] text-[#0C121A]" : "bg-[#080B10] text-white"
+      className={`min-h-screen relative font-cyber overflow-x-hidden selection:bg-cyan selection:text-black transition-colors duration-300 ${
+        isLight ? "bg-[#F4F7FA] text-[#0C121A]" : "bg-[#07090C] text-white"
       }`}
     >
-      {/* ============================================================ */}
-      {/* RETRO CYBER HUD MECH BACKGROUND                              */}
-      {/* ============================================================ */}
-      <CyberMechBackground theme={theme} />
+      {/* Background Ambience */}
+      <CyberMechBackground />
 
       {/* ============================================================ */}
-      {/* STICKY TOP NAVBAR                                            */}
+      {/* HEADER / NAVIGATION                                          */}
       {/* ============================================================ */}
       <header
-        className={`sticky top-0 z-50 w-full px-6 sm:px-12 lg:px-16 py-3 border-b backdrop-blur-md transition-colors duration-300 ${
+        className={`sticky top-0 z-50 w-full backdrop-blur-md border-b transition-colors ${
           isLight
-            ? "bg-[#FFFFFF]/95 border-[#00BFA5]/25 shadow-[0_4px_25px_rgba(0,0,0,0.06)]"
-            : "bg-[#080B10]/95 border-cyan/20"
+            ? "border-[#E2E8F0] bg-[#FFFFFF]/90 shadow-[0_4px_20px_rgba(0,0,0,0.03)]"
+            : "border-[#16202C]/80 bg-[#07090C]/85 shadow-[0_4px_25px_rgba(0,0,0,0.5)]"
         }`}
       >
-        <div className="w-full flex items-center justify-between">
-          {/* Brand Logo */}
-          <button
-            onClick={() => scrollToSection("home")}
-            className="flex flex-col text-left group cursor-pointer"
-          >
-            <div className="flex items-center gap-2">
-              <span
-                className={`font-cyber font-black tracking-wider text-3xl sm:text-4xl transition-colors ${
-                  isLight
-                    ? "text-[#0C121A] drop-shadow-[0_2px_10px_rgba(0,180,160,0.3)]"
-                    : "text-white drop-shadow-[0_0_15px_rgba(45,225,194,0.6)]"
-                }`}
-              >
-                NERVE
-                <span className={isLight ? "text-[#00897B]" : "text-cyan"}>
-                  {" "}AI
-                </span>
-              </span>
-              <div className="hidden sm:flex items-center gap-1">
-                <div className={`w-2 h-4 ${isLight ? "bg-[#00897B]" : "bg-cyan"}`} />
-              </div>
-            </div>
-            <span
-              className={`font-mono text-[8px] sm:text-[9px] tracking-[0.3em] uppercase -mt-0.5 font-bold ${
-                isLight ? "text-[#00897B]" : "text-[#00D9B5]"
+        <div className="w-full max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 h-20 flex items-center justify-between">
+          {/* Logo & Brand */}
+          <Link href="/" className="flex items-center gap-3 group">
+            <div
+              className={`w-9 h-9 border-2 flex items-center justify-center transition-all ${
+                isLight
+                  ? "border-[#00BFA5] bg-[#E0F7F4] shadow-[0_2px_12px_rgba(0,180,160,0.25)]"
+                  : "border-cyan bg-cyan/10 shadow-[0_0_15px_rgba(45,225,194,0.4)] group-hover:bg-cyan/20"
               }`}
             >
-              PREDICTIVE FLEET AI &amp; TELEMETRY
-            </span>
-          </button>
+              <span className={`font-black text-base ${isLight ? "text-[#00897B]" : "text-cyan"}`}>
+                N
+              </span>
+            </div>
+            <div className="flex flex-col">
+              <span className="font-cyber font-black text-lg tracking-wider">
+                NERVE{" "}
+                <span className={isLight ? "text-[#00897B]" : "text-cyan"}>
+                  AI
+                </span>
+              </span>
+              <span
+                className={`font-mono text-[9px] tracking-widest uppercase -mt-1 font-bold ${
+                  isLight ? "text-[#556778]" : "text-gray-400"
+                }`}
+              >
+                14-DAY FAILURE PREDICTION
+              </span>
+            </div>
+          </Link>
 
-          {/* Navigation Links */}
-          <nav className="hidden md:flex items-center gap-6 lg:gap-8 text-xs font-cyber tracking-widest">
-            {(
-              [
-                { id: "home", label: "HOME" },
-                { id: "modules", label: "AI MODULES" },
-                { id: "depots", label: "DEPOTS" },
-                { id: "contact", label: "CONTACT" },
-              ] as const
-            ).map((item) => (
+          {/* Nav Items */}
+          <nav className="hidden md:flex items-center gap-6 lg:gap-8 font-cyber text-xs tracking-wider">
+            {[
+              { id: "home", label: "HOME" },
+              { id: "demo", label: "VIDEO DEMO" },
+              { id: "modules", label: "AI MODULES" },
+              { id: "calculator", label: "ROI CALCULATOR" },
+              { id: "contact", label: "CONTACT" },
+            ].map((item) => (
               <button
                 key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className={`transition-all py-1.5 px-2 border-b-2 font-bold cursor-pointer uppercase ${
+                onClick={() => scrollToSection(item.id as any)}
+                className={`transition-all py-1.5 px-2 border-b-2 font-bold cursor-pointer ${
                   activeNav === item.id
                     ? isLight
-                      ? "text-[#00897B] border-[#00897B] drop-shadow-[0_2px_8px_rgba(0,180,160,0.4)]"
-                      : "text-cyan border-cyan drop-shadow-[0_0_10px_#2DE1C2]"
+                      ? "border-[#00897B] text-[#00897B]"
+                      : "border-cyan text-cyan"
                     : isLight
-                    ? "border-transparent text-[#556778] hover:text-[#00897B] hover:border-[#00897B]/40"
+                    ? "border-transparent text-gray-600 hover:text-[#00897B]"
                     : "border-transparent text-white/70 hover:text-cyan hover:border-cyan/40"
                 }`}
               >
@@ -234,7 +208,6 @@ export default function HomePage() {
 
           {/* Controls: Theme Switcher & Portal Login Button */}
           <div className="flex items-center gap-3 sm:gap-4">
-            {/* THEME TOGGLE BUTTON */}
             <button
               onClick={toggleTheme}
               className={`px-3 sm:px-4 py-2 flex items-center gap-2 font-cyber text-xs uppercase tracking-wider cyber-chamfer-button transition-all cursor-pointer ${
@@ -257,7 +230,6 @@ export default function HomePage() {
               )}
             </button>
 
-            {/* Portal Login Button */}
             <Link
               href="/login"
               className={`px-5 sm:px-8 py-2.5 font-cyber font-black text-xs tracking-widest uppercase transition-all active:scale-95 cyber-chamfer-button cursor-pointer ${
@@ -273,12 +245,12 @@ export default function HomePage() {
       </header>
 
       {/* ============================================================ */}
-      {/* ALL SECTIONS STACKED WITH CONTINUOUS SCROLL                 */}
+      {/* MAIN SECTIONS                                                */}
       {/* ============================================================ */}
       <main className="relative z-10 w-full flex flex-col">
         
         {/* ========================================================== */}
-        {/* SECTION 1: HOME // HERO APPOINTMENT & 3D CAR                */}
+        {/* SECTION 1: HERO WITH ROTATING 3D MODEL & STOP GUESSING MSG */}
         {/* ========================================================== */}
         <section
           id="home"
@@ -286,71 +258,32 @@ export default function HomePage() {
             isLight ? "border-[#E2E8F0]" : "border-[#16202C]/80"
           }`}
         >
-          <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+          <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
             
-            {/* Left Side: Glowing Circular START NOW Dial + 3D Mercedes AMG One */}
-            <div className="lg:col-span-7 flex flex-col items-center lg:items-start justify-center order-2 lg:order-1 -ml-2 lg:-ml-8 xl:-ml-14">
-              <button
-                onClick={() => scrollToSection("modules")}
-                className={`relative flex flex-col items-center justify-center w-20 h-20 rounded-full border-2 mb-2 ml-4 lg:ml-12 hover:scale-105 transition-transform cursor-pointer group ${
-                  isLight
-                    ? "border-[#00BFA5] bg-[#FFFFFF] shadow-[0_8px_25px_rgba(0,180,160,0.25)]"
-                    : "border-cyan bg-[#070B0F] shadow-[0_0_25px_rgba(45,225,194,0.6)]"
-                }`}
-              >
-                <span
-                  className={`font-cyber text-[10px] font-black text-center leading-tight tracking-widest ${
-                    isLight ? "text-[#00897B]" : "text-cyan group-hover:drop-shadow-[0_0_8px_#2DE1C2]"
-                  }`}
-                >
-                  START<br />NOW
-                </span>
-                <span
-                  className={`absolute -inset-1 rounded-full border ${
-                    isLight ? "border-[#00BFA5]/50" : "border-cyan/50"
-                  } animate-spin-slow`}
-                />
-              </button>
-
-              {/* 3D Car Model: Visible on Tablet & Desktop, Hidden on Mobile for optimal performance */}
-              <div className="hidden md:flex w-full max-w-[1000px] xl:max-w-[1200px] h-[540px] sm:h-[620px] lg:h-[700px] items-center justify-center relative">
-                <MercedesCar3D theme={theme} autoRotateSpeed={1.0} />
-              </div>
-
-              {/* Mobile Performance Showcase Card (Replacing heavy 3D on phones) */}
-              <div className="flex md:hidden w-full p-4 rounded-2xl border border-cyan/30 bg-black/75 my-4 flex-col items-center text-center shadow-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="w-2 h-2 rounded-full bg-[#2DE1C2] animate-ping" />
-                  <span className="font-mono text-xs text-[#2DE1C2] font-bold uppercase tracking-widest">
-                    NERVE AI // FLEET TELEMETRY NODE
-                  </span>
-                </div>
-                <div className="text-lg font-black font-cyber tracking-tight text-white mb-1">
-                  MERCEDES AMG ONE // CAN-BUS 60HZ
-                </div>
-                <div className="text-xs font-mono text-gray-400">
-                  Real-time LSTM Neural Edge Analytics • 100% Mobile Optimized
-                </div>
+            {/* Left Side: 3D Airport Catering Truck Model with Continuous Rotation (100% Transparent, No Background Box) */}
+            <div className="lg:col-span-7 flex flex-col items-center lg:items-start justify-center order-2 lg:order-1">
+              <div className="w-full h-[420px] sm:h-[520px] lg:h-[600px] relative flex items-center justify-center bg-transparent">
+                <AirportTruck3D theme={theme} autoRotateSpeed={1.4} />
               </div>
 
               {/* Status decal badges */}
               <div
-                className={`flex items-center gap-6 mt-1 font-mono text-[10px] ml-4 lg:ml-12 ${
+                className={`flex items-center gap-6 mt-4 font-mono text-[11px] ${
                   isLight ? "text-[#556778]" : "text-gray-400"
                 }`}
               >
                 <span className="flex items-center gap-1.5">
                   <span className={`w-2 h-2 rounded-full animate-ping ${isLight ? "bg-[#00897B]" : "bg-cyan"}`} />
-                  CAN-BUS TELEMETRY ONLINE
+                  3D CATERING TRUCK TELEMETRY RIG ACTIVE
                 </span>
                 <span>•</span>
-                <span className={isLight ? "text-[#00897B]" : "text-cyan"}>
-                  LSTM NEURAL PREDICTIVE ENGINE ACTIVE
+                <span className={isLight ? "text-[#00897B] font-bold" : "text-cyan font-bold"}>
+                  14-DAY FAILURE PREDICTION LINK
                 </span>
               </div>
             </div>
 
-            {/* Right Side: Telemetry Pilot Deployment Form */}
+            {/* Right Side: Headline and Pilot Deployment Form */}
             <div className="lg:col-span-5 flex flex-col justify-center order-1 lg:order-2">
               <div
                 className={`inline-flex items-center gap-2 font-mono text-[10px] tracking-widest mb-3 font-bold ${
@@ -361,12 +294,13 @@ export default function HomePage() {
                 <span>[ PROTOCOL // TELEMETRY_DISPATCH_V2 ]</span>
               </div>
 
+              {/* Headline with 3D model: Stop guessing engine health. 14-day failure prediction. */}
               <h1
-                className={`text-4xl sm:text-5xl xl:text-6xl font-cyber font-black mb-4 leading-tight tracking-wide uppercase transition-colors ${
+                className={`text-3xl sm:text-4xl xl:text-5xl font-cyber font-black mb-4 leading-tight tracking-wide uppercase transition-colors ${
                   isLight ? "text-[#0C121A]" : "text-white"
                 }`}
               >
-                PREDICT FLEET BREAKDOWNS.<br />
+                Stop guessing engine health.<br />
                 <span
                   className={
                     isLight
@@ -374,11 +308,15 @@ export default function HomePage() {
                       : "text-cyan drop-shadow-[0_0_20px_rgba(45,225,194,0.5)]"
                   }
                 >
-                  STREAM LIVE TELEMETRY NOW!
+                  14-day failure prediction.
                 </span>
               </h1>
 
-              <form onSubmit={handleBooking} className="w-full max-w-lg space-y-4 mt-2">
+              <p className="text-xs sm:text-sm font-mono text-gray-400 leading-relaxed mb-4">
+                Plug the Nerve Link OBD-II hardware into any commercial fleet vehicle in minutes. Stream live ECU telemetry with neural network Remaining Useful Life (RUL) warnings.
+              </p>
+
+              <form onSubmit={handleBooking} className="w-full max-w-lg space-y-4">
                 <div className="relative">
                   <span
                     className={`absolute -top-2 left-4 px-2 text-[10px] font-mono tracking-wider z-10 font-bold ${
@@ -407,7 +345,7 @@ export default function HomePage() {
                       isLight ? "bg-[#F4F7FA] text-[#00897B]" : "bg-[#080B10] text-cyan"
                     }`}
                   >
-                    // CONTACT ROUTE
+                    // CORPORATE EMAIL
                   </span>
                   <input
                     type="email"
@@ -423,49 +361,26 @@ export default function HomePage() {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="relative">
-                    <span
-                      className={`absolute -top-2 left-4 px-2 text-[10px] font-mono tracking-wider z-10 font-bold ${
-                        isLight ? "bg-[#F4F7FA] text-[#00897B]" : "bg-[#080B10] text-cyan"
-                      }`}
-                    >
-                      // DEPOT / CITY
-                    </span>
-                    <input
-                      type="text"
-                      required
-                      placeholder="HUB / CITY"
-                      value={formData.depot}
-                      onChange={(e) => setFormData({ ...formData, depot: e.target.value })}
-                      className={`w-full text-black font-cyber font-bold text-xs px-5 py-4 cyber-input-chamfer outline-none placeholder:text-gray-500 border-2 transition-all ${
-                        isLight
-                          ? "bg-[#FFFFFF] border-[#D1DCE5] focus:border-[#00BFA5] shadow-sm"
-                          : "bg-[#E5E9EC] border-transparent focus:border-cyan"
-                      }`}
-                    />
-                  </div>
-                  <div className="relative">
-                    <span
-                      className={`absolute -top-2 left-4 px-2 text-[10px] font-mono tracking-wider z-10 font-bold ${
-                        isLight ? "bg-[#F4F7FA] text-[#00897B]" : "bg-[#080B10] text-cyan"
-                      }`}
-                    >
-                      // FLEET SIZE
-                    </span>
-                    <input
-                      type="text"
-                      required
-                      placeholder="E.G. 25 VEHICLES"
-                      value={formData.fleetSize}
-                      onChange={(e) => setFormData({ ...formData, fleetSize: e.target.value })}
-                      className={`w-full text-black font-cyber font-bold text-xs px-5 py-4 cyber-input-chamfer outline-none placeholder:text-gray-500 border-2 transition-all ${
-                        isLight
-                          ? "bg-[#FFFFFF] border-[#D1DCE5] focus:border-[#00BFA5] shadow-sm"
-                          : "bg-[#E5E9EC] border-transparent focus:border-cyan"
-                      }`}
-                    />
-                  </div>
+                <div className="relative">
+                  <span
+                    className={`absolute -top-2 left-4 px-2 text-[10px] font-mono tracking-wider z-10 font-bold ${
+                      isLight ? "bg-[#F4F7FA] text-[#00897B]" : "bg-[#080B10] text-cyan"
+                    }`}
+                  >
+                    // FLEET SIZE (VEHICLES)
+                  </span>
+                  <input
+                    type="text"
+                    required
+                    placeholder="E.G. 25 VEHICLES"
+                    value={formData.fleetSize}
+                    onChange={(e) => setFormData({ ...formData, fleetSize: e.target.value })}
+                    className={`w-full text-black font-cyber font-bold text-xs px-5 py-4 cyber-input-chamfer outline-none placeholder:text-gray-500 border-2 transition-all ${
+                      isLight
+                        ? "bg-[#FFFFFF] border-[#D1DCE5] focus:border-[#00BFA5] shadow-sm"
+                        : "bg-[#E5E9EC] border-transparent focus:border-cyan"
+                    }`}
+                  />
                 </div>
 
                 <button
@@ -483,10 +398,18 @@ export default function HomePage() {
 
               {/* Quick Jump Shortcuts */}
               <div
-                className={`mt-8 flex items-center gap-8 text-xs font-mono ${
+                className={`mt-6 flex items-center gap-6 text-xs font-mono ${
                   isLight ? "text-[#556778]" : "text-white/80"
                 }`}
               >
+                <button
+                  onClick={() => scrollToSection("demo")}
+                  className={`underline transition-colors tracking-widest cursor-pointer ${
+                    isLight ? "hover:text-[#00897B]" : "hover:text-cyan"
+                  }`}
+                >
+                  // WATCH DEMO ↓
+                </button>
                 <button
                   onClick={() => scrollToSection("modules")}
                   className={`underline transition-colors tracking-widest cursor-pointer ${
@@ -496,21 +419,13 @@ export default function HomePage() {
                   // AI MODULES ↓
                 </button>
                 <button
-                  onClick={() => scrollToSection("depots")}
+                  onClick={() => scrollToSection("calculator")}
                   className={`underline transition-colors tracking-widest cursor-pointer ${
                     isLight ? "hover:text-[#00897B]" : "hover:text-cyan"
                   }`}
                 >
-                  // DEPOT COVERAGE ↓
+                  // ROI CALCULATOR ↓
                 </button>
-                <Link
-                  href="/store"
-                  className={`underline transition-colors tracking-widest cursor-pointer ${
-                    isLight ? "hover:text-[#00897B]" : "hover:text-cyan"
-                  }`}
-                >
-                  // HARDWARE STORE →
-                </Link>
               </div>
             </div>
 
@@ -518,163 +433,63 @@ export default function HomePage() {
         </section>
 
         {/* ========================================================== */}
-        {/* SECTION 2: 3D COCKPIT // IN-CABIN TELEMETRY SCAN           */}
+        {/* SECTION 2: LIVE FLEET TELEMETRY VIDEO PLAYER               */}
         {/* ========================================================== */}
         <section
-          id="search-showcase"
+          id="demo"
           className={`w-full px-6 sm:px-12 lg:px-16 py-20 border-b transition-colors ${
             isLight
               ? "border-[#E2E8F0] bg-[#EBF1F5]/80"
-              : "border-[#16202C]/80 bg-[#06080D]/70"
+              : "border-[#16202C]/80 bg-[#06080D]/80"
           }`}
         >
-          <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-            
-            {/* Left Side: Depot Search Box */}
-            <div className="lg:col-span-5 flex flex-col justify-center">
+          <div className="w-full max-w-7xl mx-auto flex flex-col items-center">
+            <div className="text-center max-w-3xl mx-auto mb-10">
               <div
-                className={`font-mono text-xs tracking-widest mb-2 font-bold ${
+                className={`font-mono text-xs mb-2 tracking-widest font-bold ${
                   isLight ? "text-[#00897B]" : "text-cyan"
                 }`}
               >
-                // GEOLOCATION ROUTER
+                // LIVE HARDWARE &amp; TELEMETRY DEMONSTRATION
               </div>
               <h2
-                className={`text-4xl sm:text-5xl font-cyber font-black mb-6 leading-tight tracking-wide uppercase ${
+                className={`text-3xl sm:text-4xl lg:text-5xl font-cyber font-black ${
                   isLight ? "text-[#0C121A]" : "text-white"
                 }`}
               >
-                CONNECT YOUR FLEET TO NERVE AI<br />
-                <span
-                  className={
-                    isLight
-                      ? "text-[#00897B] drop-shadow-[0_2px_12px_rgba(0,180,160,0.3)]"
-                      : "text-cyan drop-shadow-[0_0_20px_rgba(45,225,194,0.4)]"
-                  }
-                >
-                  DEPLOY PREDICTIVE HARDWARE NOW!
+                SEE NERVE AI IN{" "}
+                <span className={isLight ? "text-[#00897B]" : "text-cyan"}>
+                  ACTION
                 </span>
               </h2>
-
-              <div
-                className={`flex w-full max-w-md cyber-input-chamfer overflow-hidden ${
-                  isLight
-                    ? "bg-[#FFFFFF] border-2 border-[#D1DCE5] shadow-[0_6px_20px_rgba(0,0,0,0.06)]"
-                    : "bg-[#E5E9EC] shadow-[0_0_20px_rgba(0,0,0,0.6)]"
-                }`}
-              >
-                <input
-                  type="text"
-                  placeholder="DEPOT OR LOGISTICS HUB (DELHI, MUMBAI...)"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-transparent text-black font-cyber font-bold text-xs px-5 py-4 outline-none placeholder:text-gray-500"
-                />
-                <button
-                  onClick={() => scrollToSection("depots")}
-                  className={`px-6 sm:px-8 text-black font-cyber font-black text-xs uppercase tracking-widest transition-all cursor-pointer ${
-                    isLight
-                      ? "bg-[#00BFA5] hover:bg-[#00A896]"
-                      : "bg-cyan hover:bg-cyan-glow"
-                  }`}
-                >
-                  SEARCH
-                </button>
-              </div>
-
-              <div className="mt-8 space-y-3 font-mono">
-                <div
-                  className={`text-lg font-bold tracking-wider flex items-center gap-2 ${
-                    isLight ? "text-[#0C121A]" : "text-white"
-                  }`}
-                >
-                  <span className={`font-cyber ${isLight ? "text-[#00897B]" : "text-cyan"}`}>
-                    // CALL DISPATCH:
-                  </span>
-                  <a
-                    href="tel:1800454356"
-                    className={`hover:underline transition-colors ${
-                      isLight ? "text-[#00897B]" : "text-white"
-                    }`}
-                  >
-                    1800 454 356
-                  </a>
-                </div>
-                <div
-                  className={`flex items-center gap-8 text-xs ${
-                    isLight ? "text-[#556778]" : "text-white/80"
-                  }`}
-                >
-                  <button
-                    onClick={() => scrollToSection("modules")}
-                    className={`underline transition-colors tracking-widest cursor-pointer ${
-                      isLight ? "hover:text-[#00897B]" : "hover:text-cyan"
-                    }`}
-                  >
-                    // ALL AI MODULES
-                  </button>
-                  <button
-                    onClick={() => scrollToSection("pricing")}
-                    className={`underline transition-colors tracking-widest cursor-pointer ${
-                      isLight ? "hover:text-[#00897B]" : "hover:text-cyan"
-                    }`}
-                  >
-                    // FLEET PRICING
-                  </button>
-                </div>
-              </div>
+              <p className="text-xs sm:text-sm font-mono text-gray-400 mt-2">
+                Watch continuous 60Hz CAN-bus data streaming and autonomous 14-day failure alerts.
+              </p>
             </div>
 
-            {/* Right Side: 3D Mercedes Cockpit with Inside View + "LET'S GO!" Decal */}
-            <div className="lg:col-span-7 relative flex items-center justify-center pt-8 lg:pt-0">
-              <button
-                onClick={() => scrollToSection("modules")}
-                className={`absolute -top-6 right-8 z-20 flex flex-col items-center justify-center w-16 h-16 rounded-full border-2 cursor-pointer hover:scale-105 transition-transform group ${
-                  isLight
-                    ? "border-[#00BFA5] bg-[#FFFFFF] shadow-[0_6px_20px_rgba(0,180,160,0.25)]"
-                    : "border-cyan bg-[#070B0F] shadow-[0_0_20px_rgba(45,225,194,0.5)]"
-                }`}
-              >
-                <span
-                  className={`font-cyber text-[9px] font-black text-center leading-tight tracking-widest ${
-                    isLight ? "text-[#00897B]" : "text-cyan group-hover:drop-shadow-[0_0_8px_#2DE1C2]"
-                  }`}
-                >
-                  START<br />NOW
-                </span>
-              </button>
-
-              {/* 3D Cockpit Model: Visible on Tablet & Desktop, Hidden on Mobile */}
-              <div className="hidden md:flex w-full max-w-[800px] h-[460px] sm:h-[520px] items-center justify-center relative">
-                <MercedesCockpit3D theme={theme} />
-              </div>
-
-              {/* Mobile Performance Cockpit Badge (Lightweight for phones) */}
-              <div className="flex md:hidden w-full p-4 rounded-2xl border border-cyan/30 bg-black/75 my-4 flex-col items-center text-center shadow-lg">
-                <span className="font-mono text-xs text-[#2DE1C2] font-bold uppercase tracking-widest mb-1">
-                  // COCKPIT INSTRUMENTATION
-                </span>
-                <span className="text-lg font-black font-cyber text-white">
-                  CAN-BUS DIGITAL DIAGNOSTICS
-                </span>
-              </div>
-
-              <div
-                className={`absolute right-0 -bottom-8 font-cyber text-4xl sm:text-5xl lg:text-6xl font-black tracking-widest italic select-none pointer-events-none ${
-                  isLight
-                    ? "text-[#00897B] drop-shadow-[0_4px_25px_rgba(0,180,160,0.4)]"
-                    : "text-cyan drop-shadow-[0_0_30px_rgba(45,225,194,0.9)]"
-                }`}
-              >
-                LET&apos;S GO!
+            {/* Video Player Window - Compact Sleek Frame */}
+            <div className="w-full max-w-3xl sm:max-w-4xl h-[250px] sm:h-[350px] lg:h-[420px] relative rounded-2xl overflow-hidden border border-cyan/40 shadow-[0_0_35px_rgba(45,225,194,0.25)] bg-black flex items-center justify-center group">
+              <video
+                src="/fleet-video.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                controls
+                className="w-full h-full object-cover rounded-2xl"
+              />
+              
+              {/* Badge overlay */}
+              <div className="absolute top-3.5 left-3.5 z-10 px-3 py-1 rounded-full bg-black/80 backdrop-blur-md border border-cyan/40 text-cyan text-[10px] font-mono font-bold flex items-center gap-2 pointer-events-none">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan animate-ping" />
+                <span>NERVE LINK HARDWARE • LIVE RUNTIME STREAM</span>
               </div>
             </div>
-
           </div>
         </section>
 
         {/* ========================================================== */}
-        {/* SECTION 3: AI MODULES // PREDICTIVE TELEMETRY SUITE         */}
+        {/* SECTION 3: AI PREDICTIVE MODULES + COMPARISON TABLE        */}
         {/* ========================================================== */}
         <section
           id="modules"
@@ -683,7 +498,7 @@ export default function HomePage() {
           }`}
         >
           <div className="w-full max-w-7xl mx-auto">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
               <div>
                 <div
                   className={`font-mono text-xs mb-2 tracking-widest font-bold ${
@@ -712,7 +527,75 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* TABULAR COMPARISON: TRADITIONAL FLEET CARE vs NERVE AI E-COMMERCE */}
+            <div
+              className={`w-full my-8 overflow-hidden rounded-2xl border shadow-2xl ${
+                isLight
+                  ? "bg-white border-gray-200"
+                  : "bg-[#0E1520]/95 border-cyan/30"
+              }`}
+            >
+              <div className="overflow-x-auto">
+                <table className="w-full text-left font-mono text-xs">
+                  <thead>
+                    <tr className={`border-b ${isLight ? "border-gray-200" : "border-gray-800"}`}>
+                      <th className={`p-4 sm:p-6 w-1/2 font-cyber font-black text-xs sm:text-sm uppercase tracking-wider ${
+                        isLight ? "bg-red-50 text-red-600" : "bg-red-950/25 text-red-400"
+                      }`}>
+                        ✕ TRADITIONAL FLEET CARE
+                      </th>
+                      <th className={`p-4 sm:p-6 w-1/2 font-cyber font-black text-xs sm:text-sm uppercase tracking-wider ${
+                        isLight ? "bg-[#E6F8F5] text-[#00897B]" : "bg-cyan/15 text-cyan"
+                      }`}>
+                        ✓ NERVE AI E-COMMERCE
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className={`divide-y ${isLight ? "divide-gray-100" : "divide-gray-800/60"}`}>
+                    {[
+                      {
+                        trad: "Fleet owner waits for smoke or a breakdown to react",
+                        nerve: "Orders the Nerve Link device online in minutes",
+                      },
+                      {
+                        trad: "Manual diagnose",
+                        nerve: "Remote video-call installation no workshop visit",
+                      },
+                      {
+                        trad: "No visibility into engine health until failure occur",
+                        nerve: "Live dashboard with 14-day-ahead failure prediction",
+                      },
+                      {
+                        trad: "Fuel waste undetected",
+                        nerve: "Real-time fuel & driving alerts sent instantly",
+                      },
+                      {
+                        trad: "Paper records — no digital history",
+                        nerve: "Digital health reports & subscription managed online",
+                      },
+                    ].map((row, idx) => (
+                      <tr key={idx} className={isLight ? "hover:bg-gray-50" : "hover:bg-white/[0.02]"}>
+                        <td className={`p-4 sm:p-5 flex items-start gap-2.5 ${isLight ? "text-gray-600" : "text-gray-400"}`}>
+                          <span className="text-red-500 font-bold shrink-0">✕</span>
+                          <span>{row.trad}</span>
+                        </td>
+                        <td className={`p-4 sm:p-5 font-semibold ${
+                          isLight ? "text-gray-900 bg-teal-50/30" : "text-white bg-cyan/[0.03]"
+                        }`}>
+                          <span className={isLight ? "text-[#00897B] font-bold mr-2" : "text-cyan font-bold mr-2"}>
+                            ✓
+                          </span>
+                          <span>{row.nerve}</span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* AI Module Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
               {[
                 {
                   code: "MOD-01",
@@ -720,7 +603,7 @@ export default function HomePage() {
                   price: "₹200",
                   period: "/veh/mo",
                   features: [
-                    "Battery & alternator failure prediction (72h ahead)",
+                    "Battery & alternator failure prediction (14 days ahead)",
                     "Engine thermal anomaly & coolant monitoring",
                     "Remaining Useful Life (RUL) inference scoring",
                     "Automated alert dispatch via Twilio SMS & email",
@@ -872,136 +755,25 @@ export default function HomePage() {
         </section>
 
         {/* ========================================================== */}
-        {/* SECTION 4: DEPOTS // SERVICE HUBS & HARDWARE INSTALLATION  */}
+        {/* SECTION 4: ROI CALCULATOR (REPLACES STATIC PRICING SECTION) */}
         {/* ========================================================== */}
         <section
-          id="depots"
+          id="calculator"
           className={`w-full px-6 sm:px-12 lg:px-16 py-20 border-b transition-colors ${
             isLight
               ? "border-[#E2E8F0] bg-[#EBF1F5]/80"
-              : "border-[#16202C]/80 bg-[#07090F]/70"
+              : "border-[#16202C]/80 bg-[#06080D]/70"
           }`}
         >
-          <div className="w-full max-w-7xl mx-auto">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
+          <div className="w-full max-w-7xl mx-auto space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-4 gap-4">
               <div>
                 <div
                   className={`font-mono text-xs mb-2 tracking-widest font-bold ${
                     isLight ? "text-[#00897B]" : "text-cyan"
                   }`}
                 >
-                  // INDIAN FREIGHT CORRIDORS &amp; SERVICE HUBS
-                </div>
-                <h2
-                  className={`text-4xl sm:text-5xl font-cyber font-black ${
-                    isLight ? "text-[#0C121A]" : "text-white"
-                  }`}
-                >
-                  SERVICE{" "}
-                  <span className={isLight ? "text-[#00897B]" : "text-cyan"}>
-                    DEPOTS
-                  </span>
-                </h2>
-              </div>
-              <div
-                className={`text-xs font-mono ${
-                  isLight ? "text-[#00897B] font-bold" : "text-cyan"
-                }`}
-              >
-                {filteredDepots.length} HUBS OPERATIONAL // 100% NETWORK UPTIME
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 font-mono">
-              {filteredDepots.map((b, i) => (
-                <div
-                  key={i}
-                  className={`p-6 cyber-chamfer transition-all duration-300 flex flex-col justify-between ${
-                    isLight
-                      ? "bg-[#FFFFFF] border-2 border-[#DDE5ED] hover:border-[#00BFA5] shadow-[0_6px_20px_rgba(0,0,0,0.04)]"
-                      : "bg-[#0E151E] border-2 border-cyan/30 hover:border-cyan"
-                  }`}
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <span
-                        className={`text-sm font-cyber font-bold ${
-                          isLight ? "text-[#0C121A]" : "text-white"
-                        }`}
-                      >
-                        {b.city}
-                      </span>
-                      <span
-                        className={`text-[10px] px-2 py-0.5 rounded font-bold ${
-                          isLight
-                            ? "bg-[#E0F7F4] text-[#00897B]"
-                            : "bg-cyan/20 text-cyan"
-                        }`}
-                      >
-                        {b.status}
-                      </span>
-                    </div>
-                    <p
-                      className={`text-xs mb-4 min-h-[36px] ${
-                        isLight ? "text-[#556778]" : "text-[#8A96A3]"
-                      }`}
-                    >
-                      {b.address}
-                    </p>
-                    <div
-                      className={`text-xs font-bold mb-2 flex items-center gap-1.5 ${
-                        isLight ? "text-[#00897B]" : "text-cyan"
-                      }`}
-                    >
-                      <Phone className="w-3.5 h-3.5" />
-                      {b.phone}
-                    </div>
-                    <div
-                      className={`text-[10px] mb-6 font-bold ${
-                        isLight ? "text-[#00897B]" : "text-cyan"
-                      }`}
-                    >
-                      // {b.slots}
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => {
-                      setFormData((prev) => ({ ...prev, depot: b.city }));
-                      scrollToSection("home");
-                    }}
-                    className={`w-full py-2.5 text-xs font-cyber font-bold cyber-chamfer-button transition-all cursor-pointer ${
-                      isLight
-                        ? "bg-[#E6F8F5] hover:bg-[#00BFA5] text-[#00897B] hover:text-black border border-[#00BFA5]/30 shadow-sm"
-                        : "bg-[#141D26] hover:bg-cyan hover:text-black text-cyan"
-                    }`}
-                  >
-                    SELECT DEPOT
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ========================================================== */}
-        {/* SECTION 5: PRICING // FLEET SAAS TIERS                     */}
-        {/* ========================================================== */}
-        <section
-          id="pricing"
-          className={`w-full px-6 sm:px-12 lg:px-16 py-20 border-b transition-colors ${
-            isLight ? "border-[#E2E8F0]" : "border-[#16202C]/80"
-          }`}
-        >
-          <div className="w-full max-w-7xl mx-auto">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
-              <div>
-                <div
-                  className={`font-mono text-xs mb-2 tracking-widest font-bold ${
-                    isLight ? "text-[#00897B]" : "text-cyan"
-                  }`}
-                >
-                  // TRANSPARENT HARDWARE &amp; SAAS PLANS
+                  // E-BUSINESS FINANCIAL STRATEGY &amp; ROI SIMULATOR
                 </div>
                 <h2
                   className={`text-4xl sm:text-5xl font-cyber font-black ${
@@ -1010,7 +782,7 @@ export default function HomePage() {
                 >
                   FLEET{" "}
                   <span className={isLight ? "text-[#00897B]" : "text-cyan"}>
-                    PRICING
+                    SAVINGS SIMULATOR
                   </span>
                 </h2>
               </div>
@@ -1019,166 +791,27 @@ export default function HomePage() {
                   isLight ? "text-[#768C9E]" : "text-[#8A96A3]"
                 }`}
               >
-                HARDWARE: ₹1,499 ONE-TIME // MONTHLY SAAS PER VEHICLE
+                HARDWARE: ₹1,499 ONE-TIME // RECURRING SAAS FROM ₹150/MO
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[
-                {
-                  tier: "TIER 01",
-                  name: "STARTER",
-                  price: "₹200",
-                  period: "/veh/mo",
-                  desc: "Ideal for 1-5 vehicles getting started with predictive alerts.",
-                  feats: [
-                    "Predictive maintenance failure alerts",
-                    "Live telemetry console",
-                    "Standard weekly failure reports",
-                    "Email & SMS incident support",
-                  ],
-                },
-                {
-                  tier: "TIER 02",
-                  name: "BUSINESS",
-                  price: "₹180",
-                  period: "/veh/mo",
-                  featured: true,
-                  desc: "Designed for commercial fleets of 6-20 trucks and transport vans.",
-                  feats: [
-                    "Everything in Starter plan",
-                    "Advanced LSTM predictive analytics",
-                    "Driver behavior scoring & speed tracking",
-                    "Priority technician dispatch",
-                    "Multi-depot dashboard access",
-                  ],
-                },
-                {
-                  tier: "TIER 03",
-                  name: "ENTERPRISE",
-                  price: "₹150",
-                  period: "/veh/mo",
-                  desc: "High-volume logistics operators with 20+ commercial vehicles.",
-                  feats: [
-                    "Everything in Business plan",
-                    "Automated EDI 850/855 integration",
-                    "Custom REST API & Webhooks",
-                    "Dedicated fleet account manager",
-                    "99.9% Telemetry SLA guarantee",
-                  ],
-                },
-              ].map((m, i) => (
-                <div
-                  key={i}
-                  className={`p-8 cyber-chamfer-lg flex flex-col justify-between transition-all duration-300 hover:translate-y-[-4px] ${
-                    m.featured
-                      ? isLight
-                        ? "bg-[#FFFFFF] border-2 border-[#00BFA5] shadow-[0_14px_35px_rgba(0,180,160,0.22)]"
-                        : "bg-[#0E151E] border-2 border-cyan shadow-[0_0_35px_rgba(45,225,194,0.35)]"
-                      : isLight
-                      ? "bg-[#FFFFFF] border-2 border-[#DDE5ED] hover:border-[#00BFA5]/60 shadow-[0_6px_20px_rgba(0,0,0,0.04)]"
-                      : "bg-[#0A0E14] border-2 border-[#1E2633] hover:border-cyan/40"
-                  }`}
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span
-                        className={`text-xs font-mono tracking-wider font-bold ${
-                          isLight ? "text-[#00897B]" : "text-cyan"
-                        }`}
-                      >
-                        {m.tier}
-                      </span>
-                      {m.featured && (
-                        <span
-                          className={`text-[9px] font-cyber px-2 py-0.5 text-black font-black uppercase ${
-                            isLight ? "bg-[#00BFA5]" : "bg-cyan"
-                          }`}
-                        >
-                          POPULAR
-                        </span>
-                      )}
-                    </div>
-
-                    <h3
-                      className={`text-2xl font-cyber font-black mt-1 mb-2 ${
-                        isLight ? "text-[#0C121A]" : "text-white"
-                      }`}
-                    >
-                      {m.name}
-                    </h3>
-                    <p
-                      className={`text-xs font-mono mb-6 ${
-                        isLight ? "text-[#556778]" : "text-[#8A96A3]"
-                      }`}
-                    >
-                      {m.desc}
-                    </p>
-
-                    <div
-                      className={`text-4xl font-cyber font-black mb-6 ${
-                        isLight ? "text-[#00897B]" : "text-cyan"
-                      }`}
-                    >
-                      {m.price}
-                      <span
-                        className={`text-xs font-mono font-normal ${
-                          isLight ? "text-gray-500" : "text-gray-400"
-                        }`}
-                      >
-                        {m.period}
-                      </span>
-                    </div>
-
-                    <ul
-                      className={`space-y-3 font-mono text-xs mb-8 ${
-                        isLight ? "text-[#2C3B49]" : "text-[#BACAD6]"
-                      }`}
-                    >
-                      {m.feats.map((f, idx) => (
-                        <li key={idx} className="flex items-center gap-2">
-                          <span
-                            className={`font-bold ${
-                              isLight ? "text-[#00897B]" : "text-cyan"
-                            }`}
-                          >
-                            ✓
-                          </span>
-                          <span>{f}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <Link
-                    href="/store"
-                    className={`w-full py-3.5 text-black font-cyber font-black text-xs uppercase tracking-wider cyber-chamfer-button transition-all cursor-pointer text-center block ${
-                      isLight
-                        ? "bg-[#00BFA5] hover:bg-[#00A896] shadow-[0_6px_20px_rgba(0,180,160,0.3)]"
-                        : "bg-cyan hover:bg-cyan-glow shadow-[0_0_15px_rgba(45,225,194,0.4)]"
-                    }`}
-                  >
-                    DEPLOY HARDWARE LINK
-                  </Link>
-                </div>
-              ))}
-            </div>
+            {/* Interactive B2B ROI Calculator Component */}
+            <FleetRoiCalculator isLight={isLight} />
           </div>
         </section>
 
         {/* ========================================================== */}
-        {/* SECTION 6: SUBSCRIBE // FLEET TELEMETRY INTELLIGENCE BRIEF */}
+        {/* SECTION 5: SUBSCRIBE // FLEET TELEMETRY INTELLIGENCE BRIEF */}
         {/* ========================================================== */}
         <section
           id="subscribe"
           className={`w-full px-6 sm:px-12 lg:px-16 py-20 border-b transition-colors ${
             isLight
               ? "border-[#E2E8F0] bg-[#EBF1F5]/80"
-              : "border-[#16202C]/80 bg-[#06080D]/70"
+              : "border-[#16202C]/80 bg-[#07090F]/70"
           }`}
         >
           <div className="w-full max-w-4xl mx-auto flex flex-col items-center text-center">
-            
             <div
               className={`w-full max-w-xl flex flex-col items-center text-center px-8 py-10 cyber-chamfer-lg transition-colors ${
                 isLight
@@ -1225,30 +858,12 @@ export default function HomePage() {
                   {subscribeSuccess ? "✓ SUBSCRIBED TO TELEMETRY DISPATCH" : "SUBSCRIBE TO FLEET INTELLIGENCE"}
                 </button>
               </form>
-
-              <button
-                onClick={() => scrollToSection("home")}
-                className={`mt-8 flex flex-col items-center justify-center w-16 h-16 rounded-full border-2 cursor-pointer hover:scale-105 transition-transform group ${
-                  isLight
-                    ? "border-[#00BFA5] bg-[#FFFFFF] shadow-[0_6px_20px_rgba(0,180,160,0.25)]"
-                    : "border-cyan bg-[#070B0F] shadow-[0_0_20px_rgba(45,225,194,0.5)]"
-                }`}
-              >
-                <span
-                  className={`font-cyber text-[9px] font-black text-center leading-tight tracking-widest ${
-                    isLight ? "text-[#00897B]" : "text-cyan group-hover:drop-shadow-[0_0_8px_#2DE1C2]"
-                  }`}
-                >
-                  START<br />NOW
-                </span>
-              </button>
             </div>
-
           </div>
         </section>
 
         {/* ========================================================== */}
-        {/* SECTION 7: CONTACT // 24/7 FLEET COMMAND DESK              */}
+        {/* SECTION 6: CONTACT // 24/7 FLEET COMMAND DESK              */}
         {/* ========================================================== */}
         <section
           id="contact"
@@ -1274,7 +889,6 @@ export default function HomePage() {
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 font-mono">
-              
               {/* Left Column: Direct Phone Dispatch */}
               <div className="space-y-6">
                 <div
@@ -1425,11 +1039,9 @@ export default function HomePage() {
                   {contactSuccess ? "✓ TRANSMISSION DISPATCHED" : "SEND TRANSMISSION"}
                 </button>
               </form>
-
             </div>
           </div>
         </section>
-
       </main>
 
       {/* ============================================================ */}
@@ -1442,7 +1054,6 @@ export default function HomePage() {
             : "border-[#16202C] bg-[#070A0E] text-[#8A96A3]"
         }`}
       >
-        {/* Status Indicator */}
         <div className="flex items-center gap-3">
           <div
             className={`w-2.5 h-2.5 animate-pulse ${
@@ -1454,11 +1065,10 @@ export default function HomePage() {
               isLight ? "text-[#0C121A] font-bold" : "text-white"
             }`}
           >
-            // NERVE AI • PREDICTIVE FLEET MAINTENANCE PLATFORM
+            // NERVE AI • 14-DAY PREDICTIVE FLEET PLATFORM
           </span>
         </div>
 
-        {/* Quick Nav Anchors */}
         <div
           className={`flex flex-wrap items-center justify-center gap-4 sm:gap-6 font-cyber text-[10px] tracking-wider uppercase ${
             isLight ? "text-[#556778]" : "text-white/70"
@@ -1473,6 +1083,14 @@ export default function HomePage() {
             // HOME
           </button>
           <button
+            onClick={() => scrollToSection("demo")}
+            className={`transition-colors cursor-pointer ${
+              isLight ? "hover:text-[#00897B]" : "hover:text-cyan"
+            }`}
+          >
+            // VIDEO DEMO
+          </button>
+          <button
             onClick={() => scrollToSection("modules")}
             className={`transition-colors cursor-pointer ${
               isLight ? "hover:text-[#00897B]" : "hover:text-cyan"
@@ -1481,20 +1099,12 @@ export default function HomePage() {
             // AI MODULES
           </button>
           <button
-            onClick={() => scrollToSection("depots")}
+            onClick={() => scrollToSection("calculator")}
             className={`transition-colors cursor-pointer ${
               isLight ? "hover:text-[#00897B]" : "hover:text-cyan"
             }`}
           >
-            // DEPOTS
-          </button>
-          <button
-            onClick={() => scrollToSection("pricing")}
-            className={`transition-colors cursor-pointer ${
-              isLight ? "hover:text-[#00897B]" : "hover:text-cyan"
-            }`}
-          >
-            // PRICING
+            // ROI CALCULATOR
           </button>
           <button
             onClick={() => scrollToSection("contact")}
@@ -1506,7 +1116,6 @@ export default function HomePage() {
           </button>
         </div>
 
-        {/* Mode Indicator / Palette Decal */}
         <div className="flex items-center gap-4">
           <button
             onClick={toggleTheme}
@@ -1527,7 +1136,6 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
-
     </div>
   );
 }

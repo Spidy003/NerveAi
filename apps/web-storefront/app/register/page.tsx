@@ -11,12 +11,18 @@ export default function RegisterPage() {
   const [formData, setFormData] = useState({ email: "", password: "", fleetName: "", phone: "" });
   const [loading, setLoading] = useState(false);
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [redirect, setRedirect] = useState("/dashboard");
   const router = useRouter();
   const supabase = createClient();
 
   useEffect(() => {
     const saved = localStorage.getItem("cyber-theme");
     if (saved === "light" || saved === "dark") setTheme(saved);
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const r = params.get("redirect");
+      if (r) setRedirect(r);
+    }
   }, []);
 
   const toggleTheme = () => {
@@ -30,8 +36,8 @@ export default function RegisterPage() {
   const handleDemoLogin = () => {
     document.cookie = "nerve_demo_session=active; path=/; max-age=86400; SameSite=Lax";
     localStorage.setItem("nerve_demo_user", JSON.stringify({ email: "fleet.commander@nerveai.io", role: "Fleet Director" }));
-    toast.success("Demo Authorization Verified! Directing to Fleet Console...");
-    router.push("/dashboard");
+    toast.success("Demo Authorization Verified! Proceeding...");
+    router.push(redirect);
   };
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -58,7 +64,7 @@ export default function RegisterPage() {
       }
     } else {
       toast.success("Fleet account provisioned successfully!");
-      router.push("/dashboard");
+      router.push(redirect);
     }
   };
 
@@ -247,7 +253,7 @@ export default function RegisterPage() {
           <div className="mt-8 pt-6 border-t border-gray-800 text-center font-mono text-xs">
             <span className="text-gray-500">ALREADY HAVE ACCOUNT? </span>
             <Link
-              href="/login"
+              href={`/login${redirect !== "/dashboard" ? `?redirect=${encodeURIComponent(redirect)}` : ""}`}
               className={`font-bold hover:underline ml-1 ${
                 isLight ? "text-[#00897B]" : "text-cyan"
               }`}

@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { Star, Shield, Cpu, Zap, Plus, Minus, Check, ArrowRight, Sun, Moon, ShoppingBag, Radio } from "lucide-react";
 import { useCart } from "@/lib/hooks/useCart";
+import { useAuth } from "@/lib/hooks/useAuth";
+import AuthModal from "@/components/shared/AuthModal";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -11,7 +13,9 @@ export default function StorePage() {
   const [quantity, setQuantity] = useState(10);
   const [fleetSize, setFleetSize] = useState("6-20");
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const { addItem, items } = useCart();
+  const { isAuthenticated, user } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -39,7 +43,21 @@ export default function StorePage() {
       quantity: quantity,
     });
     toast.success("Added to telemetry cart");
-    router.push("/cart");
+  };
+
+  const handleBuyNow = () => {
+    addItem({
+      id: "nerve-link-v1",
+      name: "Nerve Link OBD-II Telemetry Device",
+      price: hardwarePrice,
+      monthlyPrice: monthlyPrice,
+      quantity: quantity,
+    });
+    if (isAuthenticated) {
+      router.push("/checkout");
+    } else {
+      setShowAuthModal(true);
+    }
   };
 
   return (
@@ -238,18 +256,32 @@ export default function StorePage() {
               </div>
             </div>
 
-            {/* Add to Cart CTA */}
-            <button
-              onClick={handleAddToCart}
-              className={`w-full py-4 text-black font-cyber font-black text-sm uppercase tracking-widest cyber-chamfer-button transition-all cursor-pointer flex items-center justify-center gap-2 ${
-                isLight
-                  ? "bg-[#00BFA5] hover:bg-[#00A896] shadow-[0_8px_25px_rgba(0,180,160,0.35)]"
-                  : "bg-cyan hover:bg-cyan-glow shadow-[0_0_25px_rgba(45,225,194,0.5)]"
-              }`}
-            >
-              <ShoppingBag className="w-5 h-5" />
-              <span>PROCEED TO PROCUREMENT CART</span>
-            </button>
+            {/* Dual CTA: Instant Buy Now (with Auth Check) + Add to Cart */}
+            <div className="flex flex-col sm:flex-row gap-3">
+              <button
+                onClick={handleBuyNow}
+                className={`flex-1 py-4 text-black font-cyber font-black text-sm uppercase tracking-widest cyber-chamfer-button transition-all cursor-pointer flex items-center justify-center gap-2 ${
+                  isLight
+                    ? "bg-[#00BFA5] hover:bg-[#00A896] shadow-[0_8px_25px_rgba(0,180,160,0.35)]"
+                    : "bg-cyan hover:bg-cyan-glow shadow-[0_0_25px_rgba(45,225,194,0.5)]"
+                }`}
+              >
+                <Zap className="w-5 h-5 fill-black" />
+                <span>BUY NOW // CHECKOUT</span>
+              </button>
+
+              <button
+                onClick={handleAddToCart}
+                className={`py-4 px-6 font-cyber font-bold text-xs uppercase tracking-wider cyber-chamfer-button border transition-all cursor-pointer flex items-center justify-center gap-2 ${
+                  isLight
+                    ? "bg-white hover:bg-gray-100 text-[#00897B] border-[#00BFA5]/50 shadow-sm"
+                    : "bg-[#101824] hover:bg-cyan/15 text-cyan border-cyan/40"
+                }`}
+              >
+                <ShoppingBag className="w-4 h-4" />
+                <span>ADD TO CART</span>
+              </button>
+            </div>
           </div>
 
           <div className="mt-8 pt-6 border-t border-gray-800/80 flex items-center justify-between text-xs font-mono text-gray-500">
@@ -259,6 +291,14 @@ export default function StorePage() {
         </div>
 
       </div>
+
+      {/* Authentication Modal if not logged in */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        redirectTo="/checkout"
+        title="Sign In or Register to Buy"
+      />
     </div>
   );
 }

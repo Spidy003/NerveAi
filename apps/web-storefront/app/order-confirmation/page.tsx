@@ -34,6 +34,9 @@ export default function OrderConfirmationPage() {
   const isLight = theme === "light";
 
   useEffect(() => {
+    // Grant immediate customer access to telemetry dashboard upon payment confirmation
+    document.cookie = "nerve_demo_session=active; path=/; max-age=86400; SameSite=Lax";
+    
     const t1 = setTimeout(() => setEdiStatus("Transmitting to Depot ERP // Awaiting EDI 855 Acknowledgment..."), 1600);
     const t2 = setTimeout(() => {
       setEdiStatus("✓ EDI 855 Ack Received // OBD Hardware Dispatched via Bluedart");
