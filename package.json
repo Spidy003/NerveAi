@@ -4,11 +4,12 @@
   "private": true,
   "description": "Nerve AI - Predictive Fleet Telemetry, Digital Cockpit & Autonomous Parts Procurement",
   "scripts": {
-    "dev:storefront": "npm --prefix apps/web-storefront run dev",
-    "dev:admin": "npm --prefix apps/admin-dashboard run dev",
-    "dev": "npm --prefix apps/web-storefront run dev",
-    "build:storefront": "npm --prefix apps/web-storefront run build",
-    "build:admin": "npm --prefix apps/admin-dashboard run build",
+    "dev:storefront": "cd apps/web-storefront && npm run dev",
+    "dev:admin": "cd apps/admin-dashboard && npm run dev",
+    "dev": "cd apps/web-storefront && npm run dev",
+    "build:storefront": "cd apps/web-storefront && npm run build",
+    "build:admin": "cd apps/admin-dashboard && npm run build",
+
     "start:api": "uvicorn main:app --reload --port 8000 --app-dir packages/api",
     "start:simulator": "python apps/simulator/ml/lstm_model/inference.py"
   }
