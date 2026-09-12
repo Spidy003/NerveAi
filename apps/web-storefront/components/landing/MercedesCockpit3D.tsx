@@ -288,86 +288,66 @@ export default function MercedesCockpit3D({
         className="w-full h-full cursor-grab active:cursor-grabbing bg-transparent overflow-visible"
       />
 
-      {/* Cyber Angle Selection Buttons Bar */}
-      <div className="absolute top-2 left-2 right-2 sm:left-4 sm:right-auto z-20 flex flex-wrap items-center gap-2 font-mono text-[10px]">
+      {/* Angle Selection Buttons Bar */}
+      <div className="absolute top-2 left-2 right-2 sm:left-4 sm:right-auto z-20 flex flex-wrap items-center gap-2 text-xs font-semibold">
         {/* Option 1: 3/4 Orbit */}
         <button
           onClick={() => handleSelectAngle("orbit")}
-          className={`px-3 py-1.5 rounded-sm uppercase tracking-wider transition-all cursor-pointer font-bold border ${
+          className={`px-3.5 py-1.5 rounded-full transition-all cursor-pointer font-bold ${
             activeAngle === "orbit"
-              ? isLight
-                ? "bg-[#00897B] text-white border-[#00897B] shadow-sm"
-                : "bg-cyan text-black border-cyan shadow-[0_0_12px_#2DE1C2]"
-              : isLight
-              ? "bg-white/80 text-[#334E68] border-[#D1DCE5] hover:bg-white"
-              : "bg-black/60 text-white/70 border-white/15 hover:text-cyan hover:border-cyan/50 backdrop-blur-sm"
+              ? "neu-flat text-blue-600 shadow-md"
+              : "neu-btn text-slate-600 hover:text-slate-900"
           }`}
         >
-          // 3/4 ANGLE
+          3/4 Angle
         </button>
 
         {/* Option 2: Front Side */}
         <button
           onClick={() => handleSelectAngle("front")}
-          className={`px-3 py-1.5 rounded-sm uppercase tracking-wider transition-all cursor-pointer font-bold border ${
+          className={`px-3.5 py-1.5 rounded-full transition-all cursor-pointer font-bold ${
             activeAngle === "front"
-              ? isLight
-                ? "bg-[#00897B] text-white border-[#00897B] shadow-sm"
-                : "bg-cyan text-black border-cyan shadow-[0_0_12px_#2DE1C2]"
-              : isLight
-              ? "bg-white/80 text-[#334E68] border-[#D1DCE5] hover:bg-white"
-              : "bg-black/60 text-white/70 border-white/15 hover:text-cyan hover:border-cyan/50 backdrop-blur-sm"
+              ? "neu-flat text-blue-600 shadow-md"
+              : "neu-btn text-slate-600 hover:text-slate-900"
           }`}
         >
-          // FRONT
+          Front
         </button>
 
         {/* Option 3: Side Profile */}
         <button
           onClick={() => handleSelectAngle("side")}
-          className={`px-3 py-1.5 rounded-sm uppercase tracking-wider transition-all cursor-pointer font-bold border ${
+          className={`px-3.5 py-1.5 rounded-full transition-all cursor-pointer font-bold ${
             activeAngle === "side"
-              ? isLight
-                ? "bg-[#00897B] text-white border-[#00897B] shadow-sm"
-                : "bg-cyan text-black border-cyan shadow-[0_0_12px_#2DE1C2]"
-              : isLight
-              ? "bg-white/80 text-[#334E68] border-[#D1DCE5] hover:bg-white"
-              : "bg-black/60 text-white/70 border-white/15 hover:text-cyan hover:border-cyan/50 backdrop-blur-sm"
+              ? "neu-flat text-blue-600 shadow-md"
+              : "neu-btn text-slate-600 hover:text-slate-900"
           }`}
         >
-          // SIDE
+          Side
         </button>
 
         {/* Option 4: Back Side */}
         <button
           onClick={() => handleSelectAngle("back")}
-          className={`px-3 py-1.5 rounded-sm uppercase tracking-wider transition-all cursor-pointer font-bold border ${
+          className={`px-3.5 py-1.5 rounded-full transition-all cursor-pointer font-bold ${
             activeAngle === "back"
-              ? isLight
-                ? "bg-[#00897B] text-white border-[#00897B] shadow-sm"
-                : "bg-cyan text-black border-cyan shadow-[0_0_12px_#2DE1C2]"
-              : isLight
-              ? "bg-white/80 text-[#334E68] border-[#D1DCE5] hover:bg-white"
-              : "bg-black/60 text-white/70 border-white/15 hover:text-cyan hover:border-cyan/50 backdrop-blur-sm"
+              ? "neu-flat text-blue-600 shadow-md"
+              : "neu-btn text-slate-600 hover:text-slate-900"
           }`}
         >
-          // BACK SIDE
+          Rear
         </button>
 
         {/* Option 5: Top-Down */}
         <button
           onClick={() => handleSelectAngle("top")}
-          className={`px-3 py-1.5 rounded-sm uppercase tracking-wider transition-all cursor-pointer font-bold border ${
+          className={`px-3.5 py-1.5 rounded-full transition-all cursor-pointer font-bold ${
             activeAngle === "top"
-              ? isLight
-                ? "bg-[#00897B] text-white border-[#00897B] shadow-sm"
-                : "bg-cyan text-black border-cyan shadow-[0_0_12px_#2DE1C2]"
-              : isLight
-              ? "bg-white/80 text-[#334E68] border-[#D1DCE5] hover:bg-white"
-              : "bg-black/60 text-white/70 border-white/15 hover:text-cyan hover:border-cyan/50 backdrop-blur-sm"
+              ? "neu-flat text-blue-600 shadow-md"
+              : "neu-btn text-slate-600 hover:text-slate-900"
           }`}
         >
-          // TOP-DOWN
+          Top-Down
         </button>
       </div>
 

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useAuth } from "@/lib/hooks/useAuth";
-import { Activity, Menu, X, ShoppingCart, ShieldAlert, Cpu } from "lucide-react";
+import { Activity, Menu, X, ShoppingCart } from "lucide-react";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { useCart } from "@/lib/hooks/useCart";
@@ -29,73 +29,72 @@ export default function Navbar() {
     <nav
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
         scrolled
-          ? "bg-[#07090C]/85 backdrop-blur-xl border-b border-[#1E2633] shadow-[0_4px_30px_rgba(0,0,0,0.8)]"
-          : "bg-transparent border-b border-transparent"
+          ? "bg-[#E6ECF5]/90 backdrop-blur-md shadow-md border-b border-slate-200/60"
+          : "bg-transparent"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20 items-center">
-          {/* Logo with Nerve Signal Beacon */}
+          {/* Logo */}
           <div className="flex items-center gap-6">
             <Link href="/" className="flex items-center gap-3 group">
-              <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-[#0F141C] border border-cyan/40 shadow-glow-cyan-sm group-hover:border-cyan transition-colors">
-                <Activity className="h-5 w-5 text-cyan animate-pulse" />
-                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-cyan shadow-[0_0_8px_#2DE1C2]" />
+              <div className="w-10 h-10 rounded-2xl neu-flat flex items-center justify-center text-blue-600 font-black text-base">
+                N
               </div>
               <div className="flex flex-col">
-                <span className="font-display font-bold text-xl tracking-tight text-white flex items-center gap-1.5">
-                  NERVE <span className="text-cyan text-sm tracking-widest font-mono">AI</span>
+                <span className="font-extrabold text-xl tracking-tight text-slate-800 flex items-center gap-1.5">
+                  NERVE <span className="text-blue-600 font-bold text-sm tracking-widest">AI</span>
                 </span>
-                <span className="text-[10px] text-[#8A96A3] font-mono tracking-wider -mt-1 hidden sm:block">
+                <span className="text-[10px] text-slate-500 font-semibold tracking-wider -mt-1 hidden sm:block">
                   NEURAL FLEET TELEMETRY
                 </span>
               </div>
             </Link>
 
             {/* Live System Pill */}
-            <div className="hidden lg:flex items-center gap-2 px-2.5 py-1 rounded-full bg-[#0B0F14] border border-[#1E2633] text-[11px] font-mono text-cyan">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan animate-ping" />
+            <div className="hidden lg:flex items-center gap-2 px-3 py-1 rounded-full neu-inset text-[11px] font-bold text-blue-600">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse" />
               <span>LSTM CORE: ONLINE</span>
             </div>
           </div>
           
           {/* Desktop Nav Links */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-6">
             <Link
               href="/#technology"
-              className="text-sm font-medium text-[#C7D0D9] hover:text-cyan transition-colors tracking-wide"
+              className="text-xs font-bold text-slate-600 hover:text-blue-600 transition-colors tracking-wide"
             >
               Neural Core
             </Link>
             <Link
               href="/store"
-              className="text-sm font-medium text-[#C7D0D9] hover:text-cyan transition-colors tracking-wide"
+              className="text-xs font-bold text-slate-600 hover:text-blue-600 transition-colors tracking-wide"
             >
-              OBD Hardware
+              Hardware Store
             </Link>
             <Link
               href="/pricing"
-              className="text-sm font-medium text-[#C7D0D9] hover:text-cyan transition-colors tracking-wide"
+              className="text-xs font-bold text-slate-600 hover:text-blue-600 transition-colors tracking-wide"
             >
               Pricing
             </Link>
             <Link
               href="/enterprise"
-              className="text-sm font-medium text-[#C7D0D9] hover:text-cyan transition-colors tracking-wide"
+              className="text-xs font-bold text-slate-600 hover:text-blue-600 transition-colors tracking-wide"
             >
               Enterprise EDI
             </Link>
             
-            <div className="flex items-center gap-4 pl-4 border-l border-[#1E2633]">
+            <div className="flex items-center gap-3 pl-3 border-l border-slate-200/80">
               {/* Shopping Cart */}
               <Link
                 href="/cart"
-                className="relative p-2.5 text-[#C7D0D9] hover:text-cyan hover:bg-[#0F141C] rounded-lg transition-all"
+                className="relative p-2.5 neu-btn rounded-full text-slate-600 hover:text-blue-600 transition-all"
                 title="Hardware Cart"
               >
-                <ShoppingCart className="h-5 w-5" />
+                <ShoppingCart className="h-4 w-4" />
                 {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 h-5 w-5 bg-cyan text-[11px] font-mono font-bold flex items-center justify-center rounded-full text-black shadow-glow-cyan-sm">
+                  <span className="absolute -top-1 -right-1 h-5 w-5 bg-blue-600 text-[10px] font-bold flex items-center justify-center rounded-full text-white shadow-sm">
                     {cartCount}
                   </span>
                 )}
@@ -104,26 +103,23 @@ export default function Navbar() {
               {user ? (
                 <Link
                   href="/dashboard"
-                  className="text-xs font-mono font-bold uppercase tracking-wider text-black bg-cyan hover:bg-cyan-glow px-4 py-2.5 rounded-lg shadow-glow-cyan-sm transition-all"
+                  className="neu-btn-primary text-xs font-bold px-4 py-2.5 rounded-full transition-all"
                 >
                   Fleet Console →
                 </Link>
               ) : (
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
                   <Link
                     href="/login"
-                    className="text-sm font-medium text-[#C7D0D9] hover:text-white px-3 py-2 transition-colors"
+                    className="text-xs font-bold text-slate-600 hover:text-blue-600 px-3 py-2 transition-colors"
                   >
                     Sign In
                   </Link>
                   <Link
                     href="/store"
-                    className="relative inline-flex items-center justify-center p-[1px] overflow-hidden rounded-lg font-mono text-xs font-bold uppercase tracking-wider text-white group"
+                    className="neu-btn-primary text-xs font-bold px-4 py-2.5 rounded-full transition-all shadow-md shadow-blue-500/20 active:scale-95"
                   >
-                    <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-cyan to-violet group-hover:from-cyan-glow group-hover:to-violet-glow" />
-                    <span className="relative px-4 py-2 transition-all ease-out bg-[#0B0F14] rounded-[7px] group-hover:bg-opacity-0">
-                      Deploy Link →
-                    </span>
+                    Deploy Link →
                   </Link>
                 </div>
               )}
@@ -132,20 +128,20 @@ export default function Navbar() {
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center gap-3">
-            <Link href="/cart" className="relative p-2 text-cyan">
-              <ShoppingCart className="h-5 w-5" />
+            <Link href="/cart" className="relative p-2 neu-btn rounded-full text-blue-600">
+              <ShoppingCart className="h-4 w-4" />
               {cartCount > 0 && (
-                <span className="absolute 0 right-0 h-4 w-4 bg-cyan text-[10px] font-bold flex items-center justify-center rounded-full text-black">
+                <span className="absolute -top-1 -right-1 h-4 w-4 bg-blue-600 text-[9px] font-bold flex items-center justify-center rounded-full text-white">
                   {cartCount}
                 </span>
               )}
             </Link>
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 rounded-lg bg-[#0F141C] border border-[#1E2633] text-[#C7D0D9]"
+              className="p-2.5 rounded-full neu-btn text-slate-700"
               aria-label="Toggle Navigation"
             >
-              {isOpen ? <X className="h-6 w-6 text-cyan" /> : <Menu className="h-6 w-6" />}
+              {isOpen ? <X className="h-5 w-5 text-blue-600" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
         </div>
@@ -153,42 +149,42 @@ export default function Navbar() {
 
       {/* Mobile Drawer */}
       {isOpen && (
-        <div className="md:hidden px-4 pt-4 pb-6 space-y-3 bg-[#07090C] border-b border-[#1E2633] shadow-2xl animate-in slide-in-from-top duration-200">
+        <div className="md:hidden px-4 pt-4 pb-6 space-y-3 bg-[#E6ECF5] border-b border-slate-200/80 shadow-xl">
           <Link
             href="/#technology"
             onClick={() => setIsOpen(false)}
-            className="block px-3 py-2.5 rounded-lg text-base font-medium text-[#C7D0D9] hover:bg-[#0F141C] hover:text-cyan font-mono"
+            className="block px-4 py-2.5 rounded-2xl text-xs font-bold text-slate-700 neu-btn"
           >
-            // 01 Neural Core
+            Neural Core
           </Link>
           <Link
             href="/store"
             onClick={() => setIsOpen(false)}
-            className="block px-3 py-2.5 rounded-lg text-base font-medium text-[#C7D0D9] hover:bg-[#0F141C] hover:text-cyan font-mono"
+            className="block px-4 py-2.5 rounded-2xl text-xs font-bold text-slate-700 neu-btn"
           >
-            // 02 OBD Hardware
+            Hardware Store
           </Link>
           <Link
             href="/pricing"
             onClick={() => setIsOpen(false)}
-            className="block px-3 py-2.5 rounded-lg text-base font-medium text-[#C7D0D9] hover:bg-[#0F141C] hover:text-cyan font-mono"
+            className="block px-4 py-2.5 rounded-2xl text-xs font-bold text-slate-700 neu-btn"
           >
-            // 03 Pricing Plans
+            Pricing Plans
           </Link>
           <Link
             href="/enterprise"
             onClick={() => setIsOpen(false)}
-            className="block px-3 py-2.5 rounded-lg text-base font-medium text-[#C7D0D9] hover:bg-[#0F141C] hover:text-cyan font-mono"
+            className="block px-4 py-2.5 rounded-2xl text-xs font-bold text-slate-700 neu-btn"
           >
-            // 04 Enterprise EDI
+            Enterprise EDI
           </Link>
           
-          <div className="pt-4 border-t border-[#1E2633] space-y-2">
+          <div className="pt-2 border-t border-slate-200/80 space-y-2">
             {user ? (
               <Link
                 href="/dashboard"
                 onClick={() => setIsOpen(false)}
-                className="block text-center w-full py-3 rounded-lg bg-cyan text-black font-mono font-bold uppercase tracking-wider"
+                className="block text-center w-full py-3 rounded-full neu-btn-primary font-bold text-xs"
               >
                 Access Fleet Dashboard
               </Link>
@@ -197,14 +193,14 @@ export default function Navbar() {
                 <Link
                   href="/login"
                   onClick={() => setIsOpen(false)}
-                  className="block text-center w-full py-2.5 rounded-lg bg-[#0F141C] border border-[#1E2633] text-white font-medium"
+                  className="block text-center w-full py-2.5 rounded-full neu-btn text-slate-700 font-bold text-xs"
                 >
                   Sign In
                 </Link>
                 <Link
                   href="/store"
                   onClick={() => setIsOpen(false)}
-                  className="block text-center w-full py-2.5 rounded-lg bg-cyan text-black font-mono font-bold uppercase tracking-wider shadow-glow-cyan-sm"
+                  className="block text-center w-full py-2.5 rounded-full neu-btn-primary font-bold text-xs shadow-md shadow-blue-500/20"
                 >
                   Deploy Nerve Link
                 </Link>
@@ -216,4 +212,3 @@ export default function Navbar() {
     </nav>
   );
 }
-

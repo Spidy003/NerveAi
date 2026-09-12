@@ -8,6 +8,7 @@ import AuthModal from "@/components/shared/AuthModal";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Footer from "@/components/shared/Footer";
 
 export default function StorePage() {
   const [quantity, setQuantity] = useState(10);
@@ -245,6 +246,8 @@ export default function StorePage() {
         redirectTo="/checkout"
         title="Sign In or Register to Buy"
       />
+
+      <Footer />
     </div>
   );
 }

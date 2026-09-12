@@ -5,6 +5,7 @@ import PricingCard from "@/components/storefront/PricingCard";
 import FleetRoiCalculator from "@/components/landing/FleetRoiCalculator";
 import Link from "next/link";
 import { ArrowRight, Calculator, CheckCircle2, TrendingUp, ShieldCheck, Zap, ArrowLeft } from "lucide-react";
+import Footer from "@/components/shared/Footer";
 
 export default function PricingPage() {
   return (
@@ -118,6 +119,8 @@ export default function PricingPage() {
           <FleetRoiCalculator isLight={true} />
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 }

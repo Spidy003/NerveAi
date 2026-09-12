@@ -1,12 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Plus, Sun, Moon, Truck, ShieldCheck, Activity } from "lucide-react";
+import { ArrowLeft, Plus, Truck, ShieldCheck, Activity } from "lucide-react";
 import toast from "react-hot-toast";
 
 export default function VehiclesPage() {
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [vehicles, setVehicles] = useState([
     { id: 1, plate: "MH 01 AB 1234", model: "Tata Ace Gold (Diesel)", status: "Active", score: 92, lastSeen: "Live Telemetry", depot: "Depot 1 (Bhiwandi)" },
     { id: 2, plate: "KA 05 XY 9876", model: "Mahindra Bolero Maxi Truck", status: "Warning", score: 45, lastSeen: "Live Telemetry", depot: "Depot 2 (Whitefield)" },
@@ -14,98 +13,67 @@ export default function VehiclesPage() {
     { id: 4, plate: "TN 09 AZ 3341", model: "Ashok Leyland Dost+", status: "Active", score: 88, lastSeen: "Live Telemetry", depot: "Depot 3 (Ambattur)" },
   ]);
 
-  useEffect(() => {
-    const saved = localStorage.getItem("cyber-theme");
-    if (saved === "light" || saved === "dark") setTheme(saved);
-  }, []);
-
-  const toggleTheme = () => {
-    const next = theme === "dark" ? "light" : "dark";
-    setTheme(next);
-    localStorage.setItem("cyber-theme", next);
-  };
-
-  const isLight = theme === "light";
-
   const handleAddVehicle = () => {
-    toast.success("Depot Provisioning Modal Initialized // OBD Link Required");
+    toast.success("Depot Provisioning Modal Initialized • OBD Link Required");
   };
 
   return (
-    <div
-      className={`min-h-screen py-10 px-4 sm:px-6 lg:px-8 font-cyber select-none transition-colors duration-300 relative ${
-        isLight ? "bg-[#F4F7FA] text-[#0C121A]" : "bg-[#080B10] text-white"
-      }`}
-    >
-      <div className="absolute inset-0 bg-grid-tech opacity-30 pointer-events-none" />
-
+    <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 font-sans bg-[#E6ECF5] text-slate-800 select-none relative">
+      
       {/* Top Breadcrumb */}
-      <div className="relative z-10 max-w-7xl mx-auto flex items-center justify-between mb-8 border-b border-gray-800/80 pb-4">
+      <div className="max-w-6xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 neu-flat px-6 py-4 rounded-full">
         <div className="flex items-center gap-3">
-          <Link href="/" className={`text-xl font-black tracking-wider ${isLight ? "text-black" : "text-white"}`}>
-            NERVE
-            <span className={isLight ? "text-[#00897B]" : "text-[#2DE1C2]"}> AI</span>
+          <Link href="/" className="text-lg font-black tracking-tight text-slate-800 flex items-center gap-2">
+            <div className="w-8 h-8 rounded-xl neu-flat flex items-center justify-center text-blue-600 font-extrabold text-sm">
+              N
+            </div>
+            <span>NERVE <span className="text-blue-600">AI</span></span>
           </Link>
-          <span className="text-gray-500 font-mono text-sm">//</span>
-          <span className="font-mono text-xs text-gray-400 tracking-wider">
-            [SYS_FLEET_VEHICLE_REGISTRY]
-          </span>
+          <span className="text-slate-300">•</span>
+          <span className="text-xs font-semibold text-slate-500">Commercial Fleet Registry</span>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <Link
             href="/dashboard"
-            className="flex items-center gap-1.5 text-xs font-mono text-gray-400 hover:text-[#2DE1C2] transition-colors"
+            className="neu-btn px-4 py-2 rounded-full text-xs font-semibold text-slate-600 hover:text-blue-600 transition-colors flex items-center gap-1.5"
           >
             <ArrowLeft className="w-3.5 h-3.5" /> Fleet Console
           </Link>
-
-          <button
-            onClick={toggleTheme}
-            className={`p-2 rounded-lg border transition-colors flex items-center gap-2 text-xs font-mono ${
-              isLight
-                ? "bg-white border-gray-300 text-gray-800 hover:bg-gray-100"
-                : "bg-navy-card/80 border-cyan/30 text-cyan hover:bg-cyan/10"
-            }`}
-            title="Toggle theme"
+          <Link
+            href="/dashboard/alerts"
+            className="neu-btn px-4 py-2 rounded-full text-xs font-semibold text-slate-600 hover:text-blue-600 transition-colors"
           >
-            {isLight ? <Moon className="w-4 h-4 text-amber-500" /> : <Sun className="w-4 h-4 text-cyan" />}
-            <span className="hidden sm:inline">{isLight ? "DARK" : "LIGHT"} MODE</span>
-          </button>
+            Predictive Alerts
+          </Link>
         </div>
       </div>
 
-      <div className="relative z-10 max-w-6xl mx-auto">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+      <div className="max-w-6xl mx-auto space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="w-2 h-2 rounded-full bg-[#2DE1C2] animate-ping" />
-              <span className="text-[11px] font-mono tracking-widest text-[#2DE1C2] uppercase font-bold">
-                COMMERCIAL FLEET REGISTRY
-              </span>
+            <div className="neu-inset px-3.5 py-1 rounded-full text-[11px] font-bold text-blue-600 inline-flex items-center gap-1.5 mb-2">
+              <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
+              <span>COMMERCIAL FLEET REGISTRY</span>
             </div>
-            <h1 className={`text-3xl font-black ${isLight ? "text-black" : "text-white"}`}>
+            <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">
               Vehicle Asset Management
             </h1>
           </div>
 
           <button
             onClick={handleAddVehicle}
-            className="px-5 py-3 bg-[#2DE1C2] hover:bg-[#25c4a8] text-black font-mono font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-[0_0_20px_rgba(45,225,194,0.3)] flex items-center gap-2 self-start sm:self-center"
+            className="neu-btn-primary px-5 py-3 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-2 self-start sm:self-center cursor-pointer shadow-md shadow-blue-500/25 active:scale-95"
           >
             <Plus className="w-4 h-4" /> Provision New Vehicle Link
           </button>
         </div>
 
-        {/* Vehicles Table HUD */}
-        <div className={`border cyber-chamfer-lg shadow-2xl overflow-hidden ${
-          isLight ? "bg-white border-gray-200" : "bg-[#0E1520]/90 border-cyan/20"
-        }`}>
+        {/* Vehicles Table Card */}
+        <div className="neu-flat rounded-3xl p-4 sm:p-6 overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left font-mono text-xs">
-              <thead className={`border-b text-gray-400 uppercase tracking-wider ${
-                isLight ? "bg-gray-50 border-gray-200" : "bg-[#090D14] border-gray-800"
-              }`}>
+            <table className="w-full text-left text-xs">
+              <thead className="border-b border-slate-200/80 text-slate-400 font-bold uppercase tracking-wider">
                 <tr>
                   <th className="p-4">Registration</th>
                   <th className="p-4">Chassis / Model</th>
@@ -115,49 +83,47 @@ export default function VehiclesPage() {
                   <th className="p-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className={`divide-y ${isLight ? "divide-gray-200" : "divide-gray-800/80"}`}>
+              <tbody className="divide-y divide-slate-200/60">
                 {vehicles.map((v) => (
                   <tr
                     key={v.id}
-                    className={`transition-colors ${
-                      isLight ? "hover:bg-gray-50" : "hover:bg-[#121926]"
-                    }`}
+                    className="hover:bg-slate-200/40 transition-colors"
                   >
-                    <td className="p-4 font-bold">
-                      <span className={isLight ? "text-black" : "text-white"}>{v.plate}</span>
+                    <td className="p-4 font-bold text-slate-800">
+                      {v.plate}
                     </td>
-                    <td className="p-4 text-gray-400">{v.model}</td>
-                    <td className="p-4 text-gray-400">{v.depot}</td>
+                    <td className="p-4 text-slate-600 font-medium">{v.model}</td>
+                    <td className="p-4 text-slate-500">{v.depot}</td>
                     <td className="p-4">
                       <div className="flex items-center gap-2">
                         <span
                           className={`font-black ${
-                            v.score >= 80 ? "text-[#2DE1C2]" : v.score >= 60 ? "text-amber-400" : "text-red-400"
+                            v.score >= 80 ? "text-blue-600" : v.score >= 60 ? "text-amber-600" : "text-rose-600"
                           }`}
                         >
                           {v.score}/100
                         </span>
                         <span
-                          className={`text-[10px] px-2 py-0.5 rounded uppercase font-bold ${
+                          className={`text-[10px] px-2.5 py-0.5 rounded-full uppercase font-bold ${
                             v.status === "Warning"
-                              ? "bg-amber-500/20 text-amber-400 border border-amber-500/30"
-                              : "bg-[#2DE1C2]/15 text-[#2DE1C2] border border-[#2DE1C2]/30"
+                              ? "neu-inset text-amber-600 font-black"
+                              : "neu-inset text-emerald-600 font-bold"
                           }`}
                         >
                           {v.status}
                         </span>
                       </div>
                     </td>
-                    <td className="p-4 text-gray-400">
+                    <td className="p-4 text-slate-500">
                       <div className="flex items-center gap-1.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#2DE1C2] animate-pulse" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse" />
                         <span>{v.lastSeen}</span>
                       </div>
                     </td>
                     <td className="p-4 text-right">
                       <Link
                         href="/dashboard"
-                        className="text-[#2DE1C2] hover:underline font-bold"
+                        className="text-blue-600 hover:text-blue-700 font-bold"
                       >
                         Inspect Telemetry &rarr;
                       </Link>

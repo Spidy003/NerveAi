@@ -22,6 +22,7 @@ import {
   Sparkles,
   ArrowUpRight,
 } from "lucide-react";
+import Footer from "@/components/shared/Footer";
 
 // Client-only dynamic 3D Model import
 const AirportTruck3D = dynamic(
@@ -684,42 +685,9 @@ export default function HomePage() {
       </main>
 
       {/* ============================================================ */}
-      {/* FOOTER (Neumorphic Bar)                                      */}
+      {/* FOOTER (Rich E-Commerce Neumorphic Bar with Social Media)    */}
       {/* ============================================================ */}
-      <footer className="relative z-20 w-full mt-24 border-t border-slate-200/80 bg-[#E6ECF5] py-8 px-6 sm:px-12">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-slate-500">
-          
-          <div className="flex items-center gap-3">
-            <span className="w-2.5 h-2.5 rounded-full bg-blue-600 animate-pulse" />
-            <span className="font-bold text-slate-800">
-              NERVE AI • 14-Day Predictive Fleet Platform
-            </span>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-center gap-6 text-xs font-medium">
-            <button onClick={() => scrollToSection("home")} className="hover:text-blue-600 transition-colors">
-              Home
-            </button>
-            <button onClick={() => scrollToSection("demo")} className="hover:text-blue-600 transition-colors">
-              Video Demo
-            </button>
-            <button onClick={() => scrollToSection("modules")} className="hover:text-blue-600 transition-colors">
-              AI Modules
-            </button>
-            <button onClick={() => scrollToSection("calculator")} className="hover:text-blue-600 transition-colors">
-              ROI Calculator
-            </button>
-            <button onClick={() => scrollToSection("contact")} className="hover:text-blue-600 transition-colors">
-              Contact
-            </button>
-          </div>
-
-          <div className="neu-inset px-4 py-1.5 rounded-full text-[11px] font-semibold text-blue-600">
-            Neumorphic Soft UI Theme Active
-          </div>
-
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

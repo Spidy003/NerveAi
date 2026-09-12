@@ -8,28 +8,15 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Script from "next/script";
 import Link from "next/link";
-import { ShieldCheck, Lock, ArrowLeft, Sun, Moon, CreditCard, Building2, Truck, CheckCircle2 } from "lucide-react";
+import { ShieldCheck, Lock, ArrowLeft, CreditCard, Building2, CheckCircle2, Zap } from "lucide-react";
+import Footer from "@/components/shared/Footer";
 
 export default function CheckoutPage() {
-  const { totalUpfront, totalMonthly, items, clearCart } = useCart();
+  const { totalUpfront, totalMonthly, clearCart } = useCart();
   const { isAuthenticated, user } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [showAuthModal, setShowAuthModal] = useState(false);
-
-  useEffect(() => {
-    const saved = localStorage.getItem("cyber-theme");
-    if (saved === "light" || saved === "dark") setTheme(saved);
-  }, []);
-
-  const toggleTheme = () => {
-    const next = theme === "dark" ? "light" : "dark";
-    setTheme(next);
-    localStorage.setItem("cyber-theme", next);
-  };
-
-  const isLight = theme === "light";
 
   const [formData, setFormData] = useState({
     name: "Vikram Malhotra",
@@ -67,7 +54,7 @@ export default function CheckoutPage() {
       currency: "INR",
       name: "Nerve AI Technologies",
       description: "OBD-II CAN-bus Telemetry Nodes & Enterprise Ingestion License",
-      handler: function (response: any) {
+      handler: function () {
         toast.success("Payment Authorized via Razorpay Node!");
         clearCart();
         router.push("/order-confirmation");
@@ -78,7 +65,7 @@ export default function CheckoutPage() {
         contact: formData.phone,
       },
       theme: {
-        color: "#2DE1C2",
+        color: "#2563EB",
       },
     };
 
@@ -89,14 +76,14 @@ export default function CheckoutPage() {
         const rzp = new window.Razorpay(options);
         rzp.open();
       } else {
-        // Mock fallback for academic demonstration
+        // Mock fallback for demonstration
         setTimeout(() => {
           toast.success("Razorpay B2B Node Verified! Transmitting EDI 850...");
           clearCart();
           router.push("/order-confirmation");
         }, 1000);
       }
-    } catch (err) {
+    } catch {
       setTimeout(() => {
         toast.success("Demo Payment Verified! Transmitting EDI 850...");
         clearCart();
@@ -110,291 +97,255 @@ export default function CheckoutPage() {
   return (
     <>
       <Script src="https://checkout.razorpay.com/v1/checkout.js" />
-      <div
-        className={`min-h-screen py-10 px-4 sm:px-6 lg:px-8 font-cyber select-none transition-colors duration-300 relative ${
-          isLight ? "bg-[#F4F7FA] text-[#0C121A]" : "bg-[#080B10] text-white"
-        }`}
-      >
-        <div className="absolute inset-0 bg-grid-tech opacity-30 pointer-events-none" />
-
-        {/* Top Breadcrumb & Cyber Controls */}
-        <div className="relative z-10 max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 border-b border-gray-800/80 pb-4">
+      <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 font-sans bg-[#E6ECF5] text-slate-800 select-none relative">
+        
+        {/* Top Header & Breadcrumb */}
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 neu-flat px-6 py-4 rounded-full">
           <div className="flex items-center gap-3">
-            <Link href="/" className={`text-xl font-black tracking-wider ${isLight ? "text-black" : "text-white"}`}>
-              NERVE
-              <span className={isLight ? "text-[#00897B]" : "text-[#2DE1C2]"}> AI</span>
+            <Link href="/" className="text-lg font-black tracking-tight text-slate-800 flex items-center gap-2">
+              <div className="w-8 h-8 rounded-xl neu-flat flex items-center justify-center text-blue-600 font-extrabold text-sm">
+                N
+              </div>
+              <span>NERVE <span className="text-blue-600">AI</span></span>
             </Link>
-            <span className="text-gray-500 font-mono text-sm">//</span>
-            <span className="font-mono text-xs text-gray-400 tracking-wider">
-              [SECURE_SETTLEMENT_GATEWAY_V2]
-            </span>
+            <span className="text-slate-300">•</span>
+            <span className="text-xs font-semibold text-slate-500">Secure Settlement Gateway</span>
           </div>
 
-          <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
+          <div className="flex items-center gap-3">
             <Link
               href="/cart"
-              className="flex items-center gap-1.5 text-xs font-mono text-gray-400 hover:text-[#2DE1C2] transition-colors"
+              className="neu-btn px-4 py-2 rounded-full text-xs font-semibold text-slate-600 hover:text-blue-600 transition-colors flex items-center gap-1.5"
             >
               <ArrowLeft className="w-3.5 h-3.5" /> Back to Cart
             </Link>
-
-            <button
-              onClick={toggleTheme}
-              className={`p-2 rounded-lg border transition-colors flex items-center gap-2 text-xs font-mono ${
-                isLight
-                  ? "bg-white border-gray-300 text-gray-800 hover:bg-gray-100"
-                  : "bg-navy-card/80 border-cyan/30 text-cyan hover:bg-cyan/10"
-              }`}
-              title="Toggle theme"
-            >
-              {isLight ? <Moon className="w-4 h-4 text-amber-500" /> : <Sun className="w-4 h-4 text-cyan" />}
-              <span className="hidden sm:inline">{isLight ? "DARK" : "LIGHT"} MODE</span>
-            </button>
           </div>
         </div>
 
-        <div className="relative z-10 max-w-5xl mx-auto">
+        <div className="max-w-6xl mx-auto space-y-6">
           {/* Header Banner */}
-          <div className="mb-8">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="w-2 h-2 rounded-full bg-[#2DE1C2] animate-ping" />
-              <span className="text-[11px] font-mono tracking-widest text-[#2DE1C2] uppercase font-bold">
-                ENCRYPTED B2B SETTLEMENT • RAZORPAY NODE
-              </span>
+          <div className="mb-2">
+            <div className="neu-inset px-3.5 py-1 rounded-full text-[11px] font-bold text-blue-600 inline-flex items-center gap-2 mb-2">
+              <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
+              <span>ENCRYPTED B2B SETTLEMENT • RAZORPAY NODE</span>
             </div>
-            <h1 className={`text-3xl sm:text-4xl font-black tracking-tight ${isLight ? "text-black" : "text-white"}`}>
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-800 tracking-tight">
               Depot Logistics &amp; Payment Authorization
             </h1>
-            <p className="text-xs font-mono text-gray-400 mt-1">
-              Compliant under IT Act 2000 (Module 4) &amp; Rule 46 CGST Tax Structure (Module 6)
+            <p className="text-xs text-slate-500 mt-1">
+              Compliant under IT Act 2000 (Module 4) &amp; Rule 46 CGST Tax Invoicing Structure
             </p>
           </div>
 
-          {/* Customer Authentication Status Banner */}
+          {/* Authentication Status Pill */}
           {isAuthenticated ? (
-            <div className="mb-6 p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono">
-              <div className="flex items-center gap-2.5 text-emerald-400">
-                <CheckCircle2 className="w-4 h-4 shrink-0" />
+            <div className="neu-flat p-4 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+              <div className="flex items-center gap-2.5 text-blue-600 font-semibold">
+                <CheckCircle2 className="w-4 h-4 shrink-0 text-blue-600" />
                 <span>
-                  LOGGED IN AS: <strong>{user?.email}</strong> ({user?.fleet_name || "Commercial Fleet"})
+                  Logged in as: <strong className="text-slate-800">{user?.email}</strong> ({user?.fleet_name || "Commercial Fleet"})
                 </span>
               </div>
-              <span className="text-[10px] text-gray-400 font-bold tracking-wider">
-                ✓ VERIFIED PROCUREMENT SESSION
+              <span className="neu-inset px-3 py-1 rounded-full text-[10px] text-blue-600 font-bold">
+                ✓ Verified Procurement Session
               </span>
             </div>
           ) : (
-            <div className="mb-6 p-4 rounded-xl border border-amber-500/40 bg-amber-500/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono">
-              <div className="flex items-center gap-2.5 text-amber-400">
-                <Lock className="w-4 h-4 shrink-0" />
+            <div className="neu-flat p-4 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+              <div className="flex items-center gap-2.5 text-slate-600">
+                <Lock className="w-4 h-4 shrink-0 text-blue-600" />
                 <span>
-                  NOT SIGNED IN: Please sign in or register to link telemetry hardware and digital invoices to your fleet account.
+                  Guest session: Sign in to bind telemetry hardware and digital invoices directly to your fleet account.
                 </span>
               </div>
               <button
                 type="button"
                 onClick={() => setShowAuthModal(true)}
-                className="px-4 py-2 bg-amber-400 hover:bg-amber-300 text-black font-bold rounded-lg text-xs tracking-wider uppercase transition-all shrink-0 cursor-pointer"
+                className="neu-btn-primary px-4 py-2 rounded-full font-bold text-xs cursor-pointer shrink-0"
               >
-                SIGN IN / REGISTER →
+                Sign In / Register →
               </button>
             </div>
           )}
 
-          <form onSubmit={handlePayment} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <form onSubmit={handlePayment} className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             {/* Form Column */}
-            <div className="lg:col-span-2 space-y-6">
-              {/* Shipping and Fleet Information HUD */}
-              <div className={`p-6 border cyber-chamfer-lg ${
-                isLight ? "bg-white border-gray-200 shadow-sm" : "bg-[#0E1520]/90 border-cyan/20 shadow-xl"
-              }`}>
-                <div className="flex items-center justify-between border-b border-gray-800 pb-3 mb-6">
+            <div className="lg:col-span-8 space-y-6">
+              
+              {/* Shipping and Fleet Information */}
+              <div className="neu-flat p-6 sm:p-8 rounded-3xl space-y-6">
+                <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
                   <div className="flex items-center gap-2">
-                    <Building2 className="w-4 h-4 text-[#2DE1C2]" />
-                    <span className="font-mono text-xs uppercase tracking-wider text-[#2DE1C2] font-bold">
-                      // 01. FLEET &amp; CORPORATE DETAILS
+                    <Building2 className="w-4 h-4 text-blue-600" />
+                    <span className="text-xs uppercase font-bold text-slate-800">
+                      01. Fleet &amp; Corporate Details
                     </span>
                   </div>
-                  <span className="text-[10px] font-mono text-gray-400">KYC VERIFIED</span>
+                  <span className="neu-inset px-2.5 py-0.5 rounded-full text-[10px] text-blue-600 font-bold">
+                    KYC Verified
+                  </span>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-mono text-xs">
-                  <div>
-                    <label className="block text-gray-400 mb-1.5 font-bold">// AUTHORIZED OFFICER</label>
-                    <input
-                      required
-                      type="text"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className={`w-full p-3 rounded-lg border outline-none font-sans text-sm transition-colors ${
-                        isLight
-                          ? "bg-gray-50 border-gray-300 text-black focus:border-[#00897B]"
-                          : "bg-[#090D14] border-gray-700 text-white focus:border-[#2DE1C2]"
-                      }`}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-gray-400 mb-1.5 font-bold">// OFFICIAL EMAIL</label>
-                    <input
-                      required
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className={`w-full p-3 rounded-lg border outline-none font-sans text-sm transition-colors ${
-                        isLight
-                          ? "bg-gray-50 border-gray-300 text-black focus:border-[#00897B]"
-                          : "bg-[#090D14] border-gray-700 text-white focus:border-[#2DE1C2]"
-                      }`}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-gray-400 mb-1.5 font-bold">// DISPATCH CONTACT NUMBER</label>
-                    <input
-                      required
-                      type="tel"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className={`w-full p-3 rounded-lg border outline-none font-sans text-sm transition-colors ${
-                        isLight
-                          ? "bg-gray-50 border-gray-300 text-black focus:border-[#00897B]"
-                          : "bg-[#090D14] border-gray-700 text-white focus:border-[#2DE1C2]"
-                      }`}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-gray-400 mb-1.5 font-bold">// FLEET / COMPANY ENTITY</label>
-                    <input
-                      required
-                      type="text"
-                      value={formData.fleetName}
-                      onChange={(e) => setFormData({ ...formData, fleetName: e.target.value })}
-                      className={`w-full p-3 rounded-lg border outline-none font-sans text-sm transition-colors ${
-                        isLight
-                          ? "bg-gray-50 border-gray-300 text-black focus:border-[#00897B]"
-                          : "bg-[#090D14] border-gray-700 text-white focus:border-[#2DE1C2]"
-                      }`}
-                    />
-                  </div>
-
-                  <div className="md:col-span-2">
-                    <label className="block text-gray-400 mb-1.5 font-bold">// DEPOT INSTALLATION DESTINATION</label>
-                    <textarea
-                      required
-                      rows={2}
-                      value={formData.address}
-                      onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                      className={`w-full p-3 rounded-lg border outline-none font-sans text-sm transition-colors ${
-                        isLight
-                          ? "bg-gray-50 border-gray-300 text-black focus:border-[#00897B]"
-                          : "bg-[#090D14] border-gray-700 text-white focus:border-[#2DE1C2]"
-                      }`}
-                    />
-                  </div>
-
-                  <div className="md:col-span-2">
-                    <div className="flex items-center justify-between mb-1.5">
-                      <label className="text-gray-400 font-bold">// 15-DIGIT GSTIN NUMBER (RULE 46 ITC CLAIM)</label>
-                      <span className="text-[#2DE1C2] text-[10px]">VERIFIED FOR GST CREDITS</span>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                  <div className="space-y-1">
+                    <label className="block text-slate-600 font-bold">Authorized Officer Name</label>
+                    <div className="neu-inset rounded-2xl px-4 py-3">
+                      <input
+                        required
+                        type="text"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        className="bg-transparent text-sm text-slate-800 w-full focus:outline-none font-medium"
+                      />
                     </div>
-                    <input
-                      type="text"
-                      value={formData.gst}
-                      onChange={(e) => setFormData({ ...formData, gst: e.target.value.toUpperCase() })}
-                      className={`w-full p-3 rounded-lg border outline-none font-mono text-sm tracking-wider uppercase transition-colors ${
-                        isLight
-                          ? "bg-gray-50 border-gray-300 text-black focus:border-[#00897B]"
-                          : "bg-[#090D14] border-gray-700 text-white focus:border-[#2DE1C2]"
-                      }`}
-                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="block text-slate-600 font-bold">Official Corporate Email</label>
+                    <div className="neu-inset rounded-2xl px-4 py-3">
+                      <input
+                        required
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        className="bg-transparent text-sm text-slate-800 w-full focus:outline-none font-medium"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="block text-slate-600 font-bold">Dispatch Contact Number</label>
+                    <div className="neu-inset rounded-2xl px-4 py-3">
+                      <input
+                        required
+                        type="tel"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        className="bg-transparent text-sm text-slate-800 w-full focus:outline-none font-medium"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="block text-slate-600 font-bold">Fleet / Company Entity</label>
+                    <div className="neu-inset rounded-2xl px-4 py-3">
+                      <input
+                        required
+                        type="text"
+                        value={formData.fleetName}
+                        onChange={(e) => setFormData({ ...formData, fleetName: e.target.value })}
+                        className="bg-transparent text-sm text-slate-800 w-full focus:outline-none font-medium"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="md:col-span-2 space-y-1">
+                    <label className="block text-slate-600 font-bold">Depot Installation Destination Address</label>
+                    <div className="neu-inset rounded-2xl p-4">
+                      <textarea
+                        required
+                        rows={2}
+                        value={formData.address}
+                        onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                        className="bg-transparent text-sm text-slate-800 w-full focus:outline-none font-medium resize-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="md:col-span-2 space-y-1">
+                    <div className="flex items-center justify-between">
+                      <label className="text-slate-600 font-bold">15-Digit GSTIN Number (Rule 46 ITC Claim)</label>
+                      <span className="text-[10px] font-bold text-blue-600">Verified for Tax Credits</span>
+                    </div>
+                    <div className="neu-inset rounded-2xl px-4 py-3">
+                      <input
+                        type="text"
+                        value={formData.gst}
+                        onChange={(e) => setFormData({ ...formData, gst: e.target.value.toUpperCase() })}
+                        className="bg-transparent text-sm text-slate-800 w-full focus:outline-none font-mono tracking-wider uppercase font-medium"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Electronic Payment Method */}
-              <div className={`p-6 border cyber-chamfer-lg ${
-                isLight ? "bg-white border-gray-200 shadow-sm" : "bg-[#0E1520]/90 border-cyan/20 shadow-xl"
-              }`}>
-                <div className="flex items-center justify-between border-b border-gray-800 pb-3 mb-4">
+              {/* Electronic Payment Gateway Card */}
+              <div className="neu-flat p-6 sm:p-8 rounded-3xl space-y-4">
+                <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
                   <div className="flex items-center gap-2">
-                    <CreditCard className="w-4 h-4 text-[#2DE1C2]" />
-                    <span className="font-mono text-xs uppercase tracking-wider text-[#2DE1C2] font-bold">
-                      // 02. ELECTRONIC PAYMENT SYSTEM (MODULE 4)
+                    <CreditCard className="w-4 h-4 text-blue-600" />
+                    <span className="text-xs uppercase font-bold text-slate-800">
+                      02. Electronic Payment System (Module 4)
                     </span>
                   </div>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-bold">
-                    AES-256 ENCRYPTION
+                  <span className="neu-inset px-2.5 py-0.5 rounded-full text-[10px] text-blue-600 font-bold">
+                    AES-256 Encryption
                   </span>
                 </div>
 
-                <div className={`p-4 rounded-xl border flex items-center justify-between ${
-                  isLight ? "bg-gray-50 border-gray-300" : "bg-[#090D14] border-gray-700"
-                }`}>
+                <div className="neu-inset p-4 rounded-2xl flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-[#2DE1C2]/10 border border-[#2DE1C2]/30 flex items-center justify-center text-[#2DE1C2]">
+                    <div className="w-10 h-10 rounded-xl neu-flat flex items-center justify-center text-blue-600">
                       <Lock className="w-5 h-5" />
                     </div>
                     <div>
-                      <div className="font-bold text-sm">Razorpay Enterprise Payment Gateway</div>
-                      <div className="text-[11px] font-mono text-gray-400">
+                      <div className="font-bold text-sm text-slate-800">Razorpay Enterprise Payment Gateway</div>
+                      <div className="text-xs text-slate-500">
                         Supports UPI AutoPay, Corporate NetBanking, NEFT/RTGS &amp; Commercial Cards
                       </div>
                     </div>
                   </div>
-                  <CheckCircle2 className="w-5 h-5 text-[#2DE1C2]" />
+                  <CheckCircle2 className="w-5 h-5 text-blue-600" />
                 </div>
               </div>
+
             </div>
 
             {/* Right Summary Column */}
-            <div className="lg:col-span-1">
-              <div className={`p-6 border cyber-chamfer-lg sticky top-8 ${
-                isLight ? "bg-white border-gray-200 shadow-md" : "bg-[#0E1520]/90 border-cyan/30 shadow-2xl"
-              }`}>
-                <div className="flex items-center justify-between border-b border-gray-800 pb-3 mb-4">
-                  <h2 className={`font-mono text-sm font-bold uppercase tracking-wider ${isLight ? "text-gray-900" : "text-white"}`}>
+            <div className="lg:col-span-4">
+              <div className="neu-flat p-6 sm:p-8 rounded-3xl space-y-6 sticky top-8">
+                <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
+                  <h2 className="text-sm font-bold uppercase tracking-wider text-slate-800">
                     Settlement Due
                   </h2>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#2DE1C2]/10 text-[#2DE1C2]">
+                  <span className="neu-inset px-2.5 py-0.5 rounded-full text-[10px] text-blue-600 font-bold">
                     INR (₹)
                   </span>
                 </div>
 
-                <div className="space-y-3 mb-6 font-mono text-xs">
-                  <div className="flex justify-between text-gray-400">
+                <div className="space-y-3 text-xs">
+                  <div className="flex justify-between text-slate-500">
                     <span>Hardware Procurement</span>
-                    <span className={isLight ? "text-black" : "text-white"}>₹{effectiveHardware.toLocaleString()}</span>
+                    <span className="font-bold text-slate-800">₹{effectiveHardware.toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between text-gray-400">
+                  <div className="flex justify-between text-slate-500">
                     <span>Bluedart Surface Express</span>
-                    <span className="text-[#2DE1C2] font-bold">₹0.00 (WAIVED)</span>
+                    <span className="text-blue-600 font-bold">₹0.00 (WAIVED)</span>
                   </div>
-                  <div className="flex justify-between text-gray-400">
+                  <div className="flex justify-between text-slate-500">
                     <span>CGST (9%) + SGST (9%)</span>
-                    <span className={isLight ? "text-black" : "text-white"}>₹{gstAmount.toLocaleString()}</span>
+                    <span className="font-bold text-slate-800">₹{gstAmount.toLocaleString()}</span>
                   </div>
-                  <div className="border-t border-gray-800/80 pt-3 flex justify-between font-bold text-sm">
-                    <span className={isLight ? "text-gray-900" : "text-white"}>Total Payable</span>
-                    <span className="text-[#2DE1C2] text-xl font-black">₹{total.toLocaleString()}</span>
+                  <div className="border-t border-slate-200/80 pt-3 flex justify-between items-baseline">
+                    <span className="font-bold text-sm text-slate-800">Total Payable</span>
+                    <span className="text-blue-600 text-2xl font-black">₹{total.toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between text-xs text-gray-400 pt-1">
+                  <div className="flex justify-between text-xs text-slate-500 pt-1 border-t border-slate-200/80">
                     <span>Recurring Cloud SaaS</span>
-                    <span className="text-cyan font-bold">₹{effectiveMonthly.toLocaleString()}/mo</span>
+                    <span className="text-blue-600 font-bold">₹{effectiveMonthly.toLocaleString()}/mo</span>
                   </div>
                 </div>
 
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-4 bg-[#2DE1C2] hover:bg-[#25c4a8] text-black font-mono font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-[0_0_25px_rgba(45,225,194,0.4)] flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
+                  className="w-full neu-btn-primary py-4 rounded-full font-bold text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-2 shadow-md shadow-blue-500/30 active:scale-95"
                 >
                   <ShieldCheck className="w-4 h-4" />
-                  <span>{loading ? "TRANSMITTING EDI 850..." : `Authorize ₹${total.toLocaleString()} via Razorpay`}</span>
+                  <span>{loading ? "Transmitting EDI 850..." : `Authorize ₹${total.toLocaleString()} via Razorpay`}</span>
                 </button>
 
-                {/* Instant Test Simulator / Viva Bypass Button */}
+                {/* Instant Test Simulator Bypass Button */}
                 <button
                   type="button"
                   onClick={() => {
@@ -405,15 +356,16 @@ export default function CheckoutPage() {
                       router.push("/order-confirmation");
                     }, 800);
                   }}
-                  className="w-full mt-3 py-3 border border-[#2DE1C2]/60 hover:bg-[#2DE1C2]/15 text-[#2DE1C2] font-mono font-bold text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full neu-btn py-3 rounded-full text-blue-600 font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer hover:text-blue-700"
                 >
-                  <span>⚡ Instant Test Settlement (Bypass Modal)</span>
+                  <Zap className="w-3.5 h-3.5" />
+                  <span>Instant Test Settlement (Bypass Modal)</span>
                 </button>
 
-                <div className="mt-4 p-3 rounded-lg bg-gray-900/40 border border-gray-800 text-[10px] font-mono text-gray-400 leading-relaxed">
-                  <span className="text-[#2DE1C2] font-bold block mb-1">// TEST PAYMENT INSTRUCTIONS:</span>
-                  • In Razorpay modal, select <strong>Netbanking</strong> (any test bank) or use card ending in <strong>1111</strong>.<br/>
-                  • Or click <strong>Instant Test Settlement</strong> above to immediately proceed to EDI 850 generation and customer console.
+                <div className="neu-inset p-3.5 rounded-2xl text-[10px] text-slate-500 leading-relaxed">
+                  <span className="text-blue-600 font-bold block mb-1">Test Payment Guide:</span>
+                  • Select <strong>Netbanking</strong> in the Razorpay window or test card.<br/>
+                  • Or click <strong>Instant Test Settlement</strong> to proceed immediately to ANSI X12 EDI 850 dispatch and digital receipt.
                 </div>
               </div>
             </div>
@@ -421,13 +373,15 @@ export default function CheckoutPage() {
         </div>
       </div>
 
-      {/* Auth Modal for Unauthenticated Checkout Guests */}
+      {/* Auth Modal */}
       <AuthModal
         isOpen={showAuthModal}
         onClose={() => setShowAuthModal(false)}
         redirectTo="/checkout"
         title="Sign In or Register Fleet Account"
       />
+
+      <Footer />
     </>
   );
 }
