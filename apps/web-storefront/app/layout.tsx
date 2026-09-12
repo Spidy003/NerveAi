@@ -39,7 +39,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} ${orbitron.variable}`}>
-      <body className="bg-[#06090D] text-[#C7D0D9] font-sans antialiased selection:bg-cyan selection:text-black min-h-screen overflow-x-hidden">
+      <body className="bg-[#E6ECF5] text-[#1E293B] font-sans antialiased selection:bg-blue-600 selection:text-white min-h-screen overflow-x-hidden">
         <main className="min-h-screen">
           {children}
         </main>
@@ -48,13 +48,17 @@ export default function RootLayout({
           position="bottom-right"
           toastOptions={{
             style: {
-              background: "#0F141C",
-              color: "#fff",
-              border: "1px solid #1E2633",
+              background: "#E6ECF5",
+              color: "#1E293B",
+              boxShadow: "6px 6px 14px #C5D0E0, -6px -6px 14px #FFFFFF",
+              borderRadius: "16px",
+              border: "none",
+              fontWeight: 600,
             },
           }}
         />
       </body>
     </html>
+
   );
 }

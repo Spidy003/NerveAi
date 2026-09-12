@@ -2,159 +2,152 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  color-scheme: dark;
-  --font-orbitron: "Orbitron", "Chakra Petch", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-space-grotesk: "Space Grotesk", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-inter: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-jetbrains-mono: "JetBrains Mono", "Fira Code", "Consolas", monospace;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #07090C;
-}
-::-webkit-scrollbar-thumb {
-  background: #1E2633;
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #2DE1C2;
-}
-
-/* Base Body */
-body {
-  background-color: #07090C;
-  color: #C7D0D9;
-  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-}
-
-/* Animated Grid Pattern */
-.bg-grid-tech {
-  background-size: 40px 40px;
-  background-image: 
-    linear-gradient(to right, rgba(45, 225, 194, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(45, 225, 194, 0.05) 1px, transparent 1px);
-}
-
-/* Cyberpunk Chamfered Cut Corners & HUD borders */
-.cyber-chamfer {
-  clip-path: polygon(
-    14px 0, 100% 0, 
-    100% calc(100% - 14px), calc(100% - 14px) 100%, 
-    0 100%, 0 14px
-  );
-}
-
-.cyber-chamfer-lg {
-  clip-path: polygon(
-    20px 0, 100% 0, 
-    100% calc(100% - 20px), calc(100% - 20px) 100%, 
-    0 100%, 0 20px
-  );
-}
-
-.cyber-chamfer-button {
-  clip-path: polygon(
-    12px 0, 100% 0, 
-    100% calc(100% - 12px), calc(100% - 12px) 100%, 
-    0 100%, 0 12px
-  );
-}
-
-.cyber-input-chamfer {
-  clip-path: polygon(
-    8px 0, 100% 0,
-    100% calc(100% - 8px), calc(100% - 8px) 100%,
-    0 100%, 0 8px
-  );
-}
-
-.bg-radial-gradient-hero {
-  background: radial-gradient(circle at 50% 30%, rgba(45, 225, 194, 0.12) 0%, rgba(108, 92, 231, 0.06) 45%, transparent 75%);
-}
-
-/* Glowing Conic Button Border */
-@keyframes spin-conic {
-  from {
-    transform: rotate(0deg);
+@layer base {
+  :root {
+    --neu-bg: #E6ECF5;
+    --neu-dark: #C5D0E0;
+    --neu-darker: #B0BED0;
+    --neu-light: #FFFFFF;
+    --neu-accent: #2563EB;
+    --neu-text: #1E293B;
+    --neu-text-muted: #64748B;
   }
-  to {
-    transform: rotate(360deg);
+
+  html {
+    scroll-behavior: smooth;
   }
-}
 
-.animate-conic-glow {
-  position: relative;
-  z-index: 0;
-  overflow: hidden;
-}
-
-.animate-conic-glow::before {
-  content: '';
-  position: absolute;
-  z-index: -2;
-  left: -50%;
-  top: -50%;
-  width: 200%;
-  height: 200%;
-  background: conic-gradient(transparent, #2DE1C2, #7B61FF, transparent 30%);
-  animation: spin-conic 4s linear infinite;
-}
-
-.animate-conic-glow::after {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  inset: 1.5px;
-  background: #0B0F14;
-  border-radius: inherit;
-}
-
-/* Glassmorphism Classes */
-.glass-panel {
-  background: rgba(15, 20, 28, 0.65);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(45, 225, 194, 0.15);
-}
-
-.glass-panel-hover {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.glass-panel-hover:hover {
-  background: rgba(18, 24, 34, 0.8);
-  border-color: rgba(45, 225, 194, 0.4);
-  box-shadow: 0 10px 30px -10px rgba(45, 225, 194, 0.15);
-}
-
-/* Telemetry scanline / signal sweep */
-@keyframes signal-sweep {
-  0% { transform: translateY(-100%); opacity: 0; }
-  50% { opacity: 0.6; }
-  100% { transform: translateY(100%); opacity: 0; }
-}
-
-.scanline {
-  animation: signal-sweep 3s ease-in-out infinite;
-}
-
-/* Respect Reduced Motion */
-@media (prefers-reduced-motion: reduce) {
-  *, ::before, ::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
   body {
-    cursor: auto !important;
+    background-color: #E6ECF5;
+    color: #1E293B;
+    font-family: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Custom Soft Neumorphic Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #E6ECF5;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 9999px;
+    border: 2px solid #E6ECF5;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+  }
+}
+
+@layer components {
+  /* Raised / Convex Neumorphic Surfaces (Exact match to reference image cards) */
+  .neu-flat {
+    background: #E6ECF5;
+    box-shadow: 8px 8px 18px #C5D0E0, -8px -8px 18px #FFFFFF;
+  }
+
+  .neu-flat-lg {
+    background: #E6ECF5;
+    box-shadow: 14px 14px 28px #BAC6D8, -14px -14px 28px #FFFFFF;
+  }
+
+  .neu-flat-sm {
+    background: #E6ECF5;
+    box-shadow: 4px 4px 10px #C8D4E4, -4px -4px 10px #FFFFFF;
+  }
+
+  /* Sunken / Inset wells (Inputs, Troughs, Sliders) */
+  .neu-inset {
+    background: #E6ECF5;
+    box-shadow: inset 3px 3px 6px #C5D0E0, inset -3px -3px 6px #FFFFFF;
+  }
+
+  .neu-inset-deep {
+    background: #E6ECF5;
+    box-shadow: inset 5px 5px 10px #B8C4D6, inset -5px -5px 10px #FFFFFF;
+  }
+
+  /* Interactive Neumorphic Buttons */
+  .neu-btn {
+    background: #E6ECF5;
+    box-shadow: 5px 5px 12px #C5D0E0, -5px -5px 12px #FFFFFF;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .neu-btn:hover {
+    box-shadow: 6px 6px 14px #BDCADC, -6px -6px 14px #FFFFFF;
+    transform: translateY(-1px);
+  }
+  .neu-btn:active,
+  .neu-btn-active {
+    box-shadow: inset 3px 3px 6px #C5D0E0, inset -3px -3px 6px #FFFFFF;
+    transform: translateY(1px);
+  }
+
+  /* Primary Blue Pill Button (Exact Sign Up button in reference image) */
+  .neu-btn-primary {
+    background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.38), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    color: #FFFFFF;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .neu-btn-primary:hover {
+    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.48), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+    transform: translateY(-1px);
+  }
+  .neu-btn-primary:active {
+    box-shadow: inset 2px 2px 6px rgba(0, 0, 0, 0.3), 0 3px 10px rgba(37, 99, 235, 0.3);
+    transform: translateY(1px);
+  }
+
+  /* Neumorphic Input Field */
+  .neu-input {
+    background: #E6ECF5;
+    border: none;
+    box-shadow: inset 3px 3px 6px #C5D0E0, inset -3px -3px 6px #FFFFFF;
+    color: #1E293B;
+    border-radius: 1rem;
+    transition: all 0.2s ease;
+  }
+  .neu-input:focus {
+    outline: none;
+    box-shadow: inset 4px 4px 8px #B8C4D6, inset -4px -4px 8px #FFFFFF, 0 0 0 2px rgba(37, 99, 235, 0.25);
+  }
+
+  /* Reference-style Underline Input (Matches Login card in reference image) */
+  .neu-input-underline {
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid #CBD5E1;
+    color: #1E293B;
+    transition: all 0.2s ease;
+  }
+  .neu-input-underline:focus {
+    outline: none;
+    border-bottom-color: #2563EB;
+  }
+
+  /* Circular Dial Knob & Track (Matches 75% dial in reference image) */
+  .neu-dial-knob {
+    background: #E6ECF5;
+    box-shadow: 6px 6px 14px #C5D0E0, -6px -6px 14px #FFFFFF;
+  }
+  .neu-dial-track {
+    box-shadow: inset 4px 4px 8px #C5D0E0, inset -4px -4px 8px #FFFFFF;
+  }
+
+  /* Toggle Switch Trough */
+  .neu-toggle-trough {
+    background: #E6ECF5;
+    box-shadow: inset 3px 3px 6px #C5D0E0, inset -3px -3px 6px #FFFFFF;
+  }
+
+  /* Slider Trough */
+  .neu-slider-track {
+    background: #E6ECF5;
+    box-shadow: inset 2px 2px 5px #C5D0E0, inset -2px -2px 5px #FFFFFF;
   }
 }

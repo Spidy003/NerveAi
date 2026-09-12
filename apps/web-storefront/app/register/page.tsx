@@ -4,20 +4,17 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Activity, ShieldCheck, ArrowRight, Sun, Moon, KeyRound } from "lucide-react";
+import { Building2, Mail, Phone, Lock, KeyRound, ArrowRight, ShieldCheck } from "lucide-react";
 import toast from "react-hot-toast";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({ email: "", password: "", fleetName: "", phone: "" });
   const [loading, setLoading] = useState(false);
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [redirect, setRedirect] = useState("/dashboard");
   const router = useRouter();
   const supabase = createClient();
 
   useEffect(() => {
-    const saved = localStorage.getItem("cyber-theme");
-    if (saved === "light" || saved === "dark") setTheme(saved);
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const r = params.get("redirect");
@@ -25,17 +22,12 @@ export default function RegisterPage() {
     }
   }, []);
 
-  const toggleTheme = () => {
-    const next = theme === "dark" ? "light" : "dark";
-    setTheme(next);
-    localStorage.setItem("cyber-theme", next);
-  };
-
-  const isLight = theme === "light";
-
   const handleDemoLogin = () => {
     document.cookie = "nerve_demo_session=active; path=/; max-age=86400; SameSite=Lax";
-    localStorage.setItem("nerve_demo_user", JSON.stringify({ email: "fleet.commander@nerveai.io", role: "Fleet Director" }));
+    localStorage.setItem(
+      "nerve_demo_user",
+      JSON.stringify({ email: "fleet.commander@nerveai.io", role: "Fleet Director" })
+    );
     toast.success("Demo Authorization Verified! Proceeding...");
     router.push(redirect);
   };
@@ -43,20 +35,23 @@ export default function RegisterPage() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const { error } = await supabase.auth.signUp({ 
-      email: formData.email, 
+    const { error } = await supabase.auth.signUp({
+      email: formData.email,
       password: formData.password,
       options: {
         data: {
           fleet_name: formData.fleetName,
-          phone: formData.phone
-        }
-      }
+          phone: formData.phone,
+        },
+      },
     });
     setLoading(false);
-    
+
     if (error) {
-      if (error.message.toLowerCase().includes("rate limit") || error.message.toLowerCase().includes("email")) {
+      if (
+        error.message.toLowerCase().includes("rate limit") ||
+        error.message.toLowerCase().includes("email")
+      ) {
         toast.error(`${error.message} — Switching to instant demo session!`);
         handleDemoLogin();
       } else {
@@ -69,206 +64,155 @@ export default function RegisterPage() {
   };
 
   return (
-    <div
-      className={`min-h-screen flex flex-col justify-between p-4 sm:p-8 lg:p-12 relative overflow-hidden font-cyber select-none transition-colors duration-300 ${
-        isLight ? "bg-[#F4F7FA] text-[#0C121A]" : "bg-[#080B10] text-white"
-      }`}
-    >
-      <div className="absolute inset-0 bg-grid-tech opacity-30 pointer-events-none" />
-
-      {/* Top Bar with Brand & Theme Switcher */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-        <Link href="/" className="flex items-center gap-2 group">
-          <span className="text-2xl font-black tracking-wider text-white">
-            NERVE
-            <span className={isLight ? "text-[#00897B]" : "text-cyan"}>
-              {" "}AI
-            </span>
+    <div className="min-h-screen bg-[#E6ECF5] text-slate-800 flex flex-col justify-between p-4 sm:p-8 font-sans select-none relative overflow-hidden">
+      
+      {/* Top Bar with Brand & Back Navigation */}
+      <div className="w-full max-w-5xl mx-auto flex items-center justify-between py-2">
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className="w-10 h-10 rounded-2xl neu-flat flex items-center justify-center group-hover:scale-105 transition-transform">
+            <span className="font-extrabold text-lg text-blue-600">N</span>
+          </div>
+          <span className="font-bold text-lg tracking-tight text-slate-800">
+            NERVE <span className="text-blue-600">AI</span>
           </span>
-          <div className={`w-2 h-4 ${isLight ? "bg-[#00897B]" : "bg-cyan"}`} />
         </Link>
 
         <div className="flex items-center gap-3">
-          <button
-            onClick={toggleTheme}
-            className={`px-3 py-1.5 flex items-center gap-2 font-mono text-[11px] uppercase cyber-chamfer-button transition-all cursor-pointer ${
-              isLight
-                ? "bg-white text-[#00897B] border border-[#00BFA5]/40 shadow-sm"
-                : "bg-[#141D26] text-cyan border border-cyan/40"
-            }`}
-          >
-            {isLight ? <Moon className="w-3.5 h-3.5" /> : <Sun className="w-3.5 h-3.5" />}
-            <span>{isLight ? "DARK MODE" : "WHITE MODE"}</span>
-          </button>
           <Link
             href="/login"
-            className={`font-mono text-xs hover:underline ${
-              isLight ? "text-[#556778]" : "text-gray-400"
-            }`}
+            className="neu-btn px-4 py-2 rounded-full text-xs font-semibold text-slate-600 hover:text-blue-600 transition-colors"
           >
-            // LOGIN
+            ← Sign In Instead
           </Link>
         </div>
       </div>
 
-      {/* Center Auth Card */}
-      <div className="relative z-10 w-full max-w-lg mx-auto my-auto py-6">
-        <div
-          className={`p-5 sm:p-8 lg:p-10 rounded-2xl border-2 transition-all ${
-            isLight
-              ? "bg-white border-[#00BFA5]/40 shadow-[0_12px_35px_rgba(0,180,160,0.18)]"
-              : "bg-[#0E151E] border-cyan/40 shadow-[0_0_35px_rgba(45,225,194,0.2)]"
-          }`}
-        >
-          <div className="flex items-center justify-between mb-6 border-b pb-4 border-gray-800">
-            <div className="flex items-center gap-2">
-              <span className={`w-2 h-2 rounded-full animate-ping ${isLight ? "bg-[#00897B]" : "bg-cyan"}`} />
-              <span className={`font-mono text-[10px] tracking-widest font-bold ${isLight ? "text-[#00897B]" : "text-cyan"}`}>
-                [ PROVISION // FLEET_ACCOUNT_V2 ]
-              </span>
-            </div>
-            <span className="font-mono text-[10px] text-gray-500">RLS POSTGRES</span>
-          </div>
-
-          <div className="mb-6">
-            <h1 className="text-3xl font-black tracking-tight mb-2 uppercase">
-              REGISTER FLEET
+      {/* Main Register Card (Neumorphic Soft UI matching Theme) */}
+      <div className="w-full max-w-lg mx-auto my-auto py-6">
+        <div className="neu-flat p-8 sm:p-10 rounded-3xl space-y-6">
+          
+          <div className="flex items-center justify-between">
+            <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">
+              Register Fleet
             </h1>
-            <p className={`text-xs font-mono ${isLight ? "text-[#556778]" : "text-gray-400"}`}>
-              Provision your enterprise company for predictive telematics.
-            </p>
+            <span className="neu-inset px-3 py-1 rounded-full text-[10px] font-bold text-blue-600 uppercase">
+              Enterprise Provisioning
+            </span>
           </div>
 
-          {/* One-Click Demo Access for Evaluation / Viva */}
+          <p className="text-xs text-slate-500">
+            Provision your commercial enterprise fleet for predictive telematics and automated EDI workflows.
+          </p>
+
+          {/* Evaluator / Viva Demo Access Pill Button */}
           <button
             type="button"
             onClick={handleDemoLogin}
-            className="w-full py-3.5 px-4 rounded-xl bg-[#2DE1C2] hover:bg-[#25c4a8] text-black font-mono text-xs font-bold uppercase tracking-wider mb-6 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(45,225,194,0.4)] transition-all cursor-pointer"
+            className="w-full neu-btn py-3 px-4 rounded-full text-slate-700 font-bold text-xs flex items-center justify-center gap-2 hover:text-blue-600 transition-colors cursor-pointer"
           >
-            <KeyRound className="w-4 h-4" />
-            <span>⚡ ONE-CLICK DEMO ACCESS (BYPASS RATE LIMIT)</span>
+            <KeyRound className="w-4 h-4 text-blue-600" />
+            <span>One-Click Evaluator Demo Access</span>
           </button>
 
-          <form onSubmit={handleRegister} className="space-y-4">
-            <div className="relative">
-              <span
-                className={`absolute -top-2 left-4 px-2 text-[10px] font-mono tracking-wider z-10 font-bold ${
-                  isLight ? "bg-white text-[#00897B]" : "bg-[#0E151E] text-cyan"
-                }`}
-              >
-                // FLEET / ENTERPRISE NAME
-              </span>
-              <input
-                required
-                type="text"
-                placeholder="E.G. RAJ LOGISTICS EXPRESS"
-                onChange={(e) => setFormData({ ...formData, fleetName: e.target.value })}
-                className={`w-full text-black font-cyber font-bold text-xs px-5 py-4 cyber-input-chamfer outline-none placeholder:text-gray-500 border-2 transition-all ${
-                  isLight
-                    ? "bg-[#F8FAFC] border-[#D1DCE5] focus:border-[#00BFA5]"
-                    : "bg-[#E5E9EC] border-transparent focus:border-cyan"
-                }`}
-              />
+          <form onSubmit={handleRegister} className="space-y-4 pt-1">
+            
+            {/* Enterprise / Fleet Name */}
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-slate-600">Fleet / Enterprise Name</label>
+              <div className="neu-inset rounded-2xl px-4 py-3 flex items-center justify-between">
+                <input
+                  required
+                  type="text"
+                  placeholder="e.g. Raj Logistics Express"
+                  value={formData.fleetName}
+                  onChange={(e) => setFormData({ ...formData, fleetName: e.target.value })}
+                  className="bg-transparent text-sm text-slate-700 w-full focus:outline-none placeholder-slate-400 font-medium"
+                />
+                <Building2 className="w-4 h-4 text-slate-400 ml-2 shrink-0" />
+              </div>
             </div>
 
-            <div className="relative">
-              <span
-                className={`absolute -top-2 left-4 px-2 text-[10px] font-mono tracking-wider z-10 font-bold ${
-                  isLight ? "bg-white text-[#00897B]" : "bg-[#0E151E] text-cyan"
-                }`}
-              >
-                // CORPORATE ROUTE (EMAIL)
-              </span>
-              <input
-                required
-                type="email"
-                placeholder="dispatch@rajlogistics.in"
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className={`w-full text-black font-cyber font-bold text-xs px-5 py-4 cyber-input-chamfer outline-none placeholder:text-gray-500 border-2 transition-all ${
-                  isLight
-                    ? "bg-[#F8FAFC] border-[#D1DCE5] focus:border-[#00BFA5]"
-                    : "bg-[#E5E9EC] border-transparent focus:border-cyan"
-                }`}
-              />
+            {/* Corporate Email */}
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-slate-600">Corporate Route (Email)</label>
+              <div className="neu-inset rounded-2xl px-4 py-3 flex items-center justify-between">
+                <input
+                  required
+                  type="email"
+                  placeholder="dispatch@rajlogistics.in"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className="bg-transparent text-sm text-slate-700 w-full focus:outline-none placeholder-slate-400 font-medium"
+                />
+                <Mail className="w-4 h-4 text-slate-400 ml-2 shrink-0" />
+              </div>
             </div>
 
+            {/* Phone & Password Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="relative">
-                <span
-                  className={`absolute -top-2 left-4 px-2 text-[10px] font-mono tracking-wider z-10 font-bold ${
-                    isLight ? "bg-white text-[#00897B]" : "bg-[#0E151E] text-cyan"
-                  }`}
-                >
-                  // TELEMETRY CONTACT (PHONE)
-                </span>
-                <input
-                  required
-                  type="tel"
-                  placeholder="+91 98765 43210"
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className={`w-full text-black font-cyber font-bold text-xs px-5 py-4 cyber-input-chamfer outline-none placeholder:text-gray-500 border-2 transition-all ${
-                    isLight
-                      ? "bg-[#F8FAFC] border-[#D1DCE5] focus:border-[#00BFA5]"
-                      : "bg-[#E5E9EC] border-transparent focus:border-cyan"
-                  }`}
-                />
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-slate-600">Telemetry Contact (Phone)</label>
+                <div className="neu-inset rounded-2xl px-4 py-3 flex items-center justify-between">
+                  <input
+                    required
+                    type="tel"
+                    placeholder="+91 98765 43210"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    className="bg-transparent text-sm text-slate-700 w-full focus:outline-none placeholder-slate-400 font-medium"
+                  />
+                  <Phone className="w-4 h-4 text-slate-400 ml-2 shrink-0" />
+                </div>
               </div>
 
-              <div className="relative">
-                <span
-                  className={`absolute -top-2 left-4 px-2 text-[10px] font-mono tracking-wider z-10 font-bold ${
-                    isLight ? "bg-white text-[#00897B]" : "bg-[#0E151E] text-cyan"
-                  }`}
-                >
-                  // ACCESS KEY (PASSWORD)
-                </span>
-                <input
-                  required
-                  type="password"
-                  placeholder="••••••••••••"
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className={`w-full text-black font-cyber font-bold text-xs px-5 py-4 cyber-input-chamfer outline-none placeholder:text-gray-500 border-2 transition-all ${
-                    isLight
-                      ? "bg-[#F8FAFC] border-[#D1DCE5] focus:border-[#00BFA5]"
-                      : "bg-[#E5E9EC] border-transparent focus:border-cyan"
-                  }`}
-                />
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-slate-600">Access Key (Password)</label>
+                <div className="neu-inset rounded-2xl px-4 py-3 flex items-center justify-between">
+                  <input
+                    required
+                    type="password"
+                    placeholder="••••••••••••"
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    className="bg-transparent text-sm text-slate-700 w-full focus:outline-none placeholder-slate-400 font-medium tracking-wider"
+                  />
+                  <Lock className="w-4 h-4 text-slate-400 ml-2 shrink-0" />
+                </div>
               </div>
             </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className={`w-full py-4 text-black font-cyber font-black text-xs uppercase tracking-widest cyber-chamfer-button transition-all cursor-pointer flex items-center justify-center gap-2 mt-2 ${
-                isLight
-                  ? "bg-[#00BFA5] hover:bg-[#00A896] shadow-[0_6px_20px_rgba(0,180,160,0.3)]"
-                  : "bg-cyan hover:bg-cyan-glow shadow-[0_0_20px_rgba(45,225,194,0.5)]"
-              }`}
-            >
-              <span>{loading ? "PROVISIONING ACCOUNT..." : "PROVISION FLEET ACCOUNT"}</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
+            {/* Primary Blue Button */}
+            <div className="pt-2">
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full neu-btn-primary py-4 rounded-full font-bold text-sm tracking-wide flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] shadow-md shadow-blue-500/30"
+              >
+                <span>{loading ? "Provisioning Account..." : "Provision Fleet Account"}</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
           </form>
 
-          <div className="mt-8 pt-6 border-t border-gray-800 text-center font-mono text-xs">
-            <span className="text-gray-500">ALREADY HAVE ACCOUNT? </span>
+          <div className="pt-4 border-t border-slate-200/80 text-center text-xs text-slate-500">
+            <span>Already have a fleet account? </span>
             <Link
               href={`/login${redirect !== "/dashboard" ? `?redirect=${encodeURIComponent(redirect)}` : ""}`}
-              className={`font-bold hover:underline ml-1 ${
-                isLight ? "text-[#00897B]" : "text-cyan"
-              }`}
+              className="font-bold text-blue-600 hover:underline ml-1"
             >
-              OPERATOR SIGN IN →
+              Operator Sign In →
             </Link>
           </div>
+
         </div>
       </div>
 
-      {/* Bottom Footer Telemetry Decal */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto flex items-center justify-between text-[10px] font-mono text-gray-500 border-t border-gray-800/60 pt-4">
-        <span>COMPLIANCE: ANSI X12 EDI READY • ISO 27001 CLOUD SECURITY</span>
-        <span>NERVE AI PLATFORM V2.4</span>
+      {/* Footer Info */}
+      <div className="w-full max-w-5xl mx-auto flex items-center justify-between text-[11px] text-slate-400 py-2">
+        <span>Compliance: ANSI X12 EDI Ready • ISO 27001 Cloud Security</span>
+        <span>Nerve AI Platform • Soft UI Neumorphic Theme</span>
       </div>
+
     </div>
   );
 }
