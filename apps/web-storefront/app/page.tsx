@@ -195,14 +195,9 @@ export default function HomePage() {
         >
           <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
             
-            {/* Left Side: 3D Airport Catering Truck on Convex Neumorphic Podium */}
+            {/* Left Side: 3D Airport Catering Truck Model */}
             <div className="lg:col-span-7 flex flex-col items-center justify-center order-2 lg:order-1">
               <div className="w-full max-w-[560px] h-[440px] sm:h-[520px] relative flex items-center justify-center">
-                
-                {/* Convex Raised Neumorphic Podium */}
-                <div className="absolute w-[360px] sm:w-[450px] h-[360px] sm:h-[450px] rounded-full neu-flat-lg pointer-events-none" />
-                <div className="absolute w-[280px] sm:w-[350px] h-[280px] sm:h-[350px] rounded-full neu-inset pointer-events-none" />
-
                 {/* 3D WebGL Canvas */}
                 <div className="relative z-10 w-full h-full">
                   <AirportTruck3D theme="light" autoRotateSpeed={1.4} />
